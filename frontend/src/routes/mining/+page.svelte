@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { BLOCKS_PER_DAY, CHAIN_NAME, NANO_UNIT, SITE_NAME, TICKER } from '$lib/chain';
 	import { onDestroy } from 'svelte';
 	import { page } from '$app/state';
 	import { status } from '$lib/status/status.svelte';
@@ -62,7 +63,7 @@
 		if (tip == null || tip < 1) return;
 		changed();
 		to = String(tip);
-		from = String(Math.max(1, tip - 719));
+		from = String(Math.max(1, tip - (BLOCKS_PER_DAY - 1)));
 	}
 	function load(event: SubmitEvent) {
 		event.preventDefault();
@@ -78,9 +79,9 @@
 </script>
 
 <svelte:head
-	><title>Mining signals — Kadia Explorer</title><meta
+	><title>Mining signals — {SITE_NAME} Explorer</title><meta
 		name="description"
-		content="Inspect exact block shares by miner public key, header versions and observed vote bytes across a pinned Ergo block range."
+		content="Inspect exact block shares by miner public key, header versions and observed vote bytes across a pinned {CHAIN_NAME} block range."
 	/></svelte:head
 >
 <div class="mining-page">
@@ -128,7 +129,7 @@
 				class="secondary"
 				onclick={recent}
 				disabled={!status.current?.indexed}
-				aria-label="Use latest 720 blocks">Latest 720 blocks</button
+				aria-label="Use latest {BLOCKS_PER_DAY} blocks">Latest {BLOCKS_PER_DAY} blocks</button
 			>
 		</div>
 		{#if pin}<p class="pin">
@@ -207,7 +208,9 @@
 								<span
 									>First <a href={'/blocks/' + key.first_block_id}>{exact(key.first_height)}</a> ·
 									Last <a href={'/blocks/' + key.last_block_id}>{exact(key.last_height)}</a></span
-								><span title={key.fees + ' nanoERG'}>{formatErg(key.fees)} ERG in fee outputs</span>
+								><span title={key.fees + ' ' + NANO_UNIT}
+									>{formatErg(key.fees)} {TICKER} in fee outputs</span
+								>
 							</div>
 						</li>
 					{/each}
@@ -216,12 +219,12 @@
 						<strong>Other {exact(data.miner_keys.other_key_count)} public keys</strong><span
 							>{exact(data.miner_keys.other_block_count)} / {exact(data.block_count)} blocks</span
 						>
-						<p>{formatErg(data.miner_keys.other_fees)} ERG in fee outputs in those blocks.</p>
+						<p>{formatErg(data.miner_keys.other_fees)} {TICKER} in fee outputs in those blocks.</p>
 					</div>{/if}
 				<p class="fee-note">
-					Range fee outputs: {formatErg(data.totals.fees)} ERG (<span class="raw"
-						>{data.totals.fees} nanoERG</span
-					>). This is not proven miner income.
+					Range fee outputs: {formatErg(data.totals.fees)}
+					{TICKER} (<span class="raw">{data.totals.fees} {NANO_UNIT}</span>). This is not proven
+					miner income.
 				</p>
 			</section>
 			<div class="signal-panels">
@@ -293,8 +296,8 @@
 	{:else if !mining.loading && !localError && !mining.error}<section class="empty">
 			<h2>Choose the blocks to inspect.</h2>
 			<p>
-				Use a retained height range or prepare the latest 720 indexed blocks. Pinned links preserve
-				the end-block identity and ask each viewer to load explicitly.
+				Use a retained height range or prepare the latest {BLOCKS_PER_DAY} indexed blocks. Pinned links
+				preserve the end-block identity and ask each viewer to load explicitly.
 			</p>
 			<a href="/network">Explore network activity ↗</a>
 		</section>{/if}

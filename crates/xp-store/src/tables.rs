@@ -82,6 +82,9 @@ pub const META_GENESIS_SEEDED: &[u8] = b"genesis_seeded";
 /// `Store::seed_genesis`. Absent on a store that never seeded genesis (a partial store), in
 /// which case the API simply cannot label emission boxes.
 pub const META_EMISSION_TREE_HASH: &[u8] = b"emission_tree_hash";
+/// Sum of the chain-spec genesis box values, a `u128` big-endian, written by
+/// `Store::seed_genesis`. Absent on a store seeded before this key existed.
+pub const META_GENESIS_VALUE_SUM: &[u8] = b"genesis_value_sum";
 pub const SCHEMA_VERSION: u32 = 2;
 
 /// Present only on a store that began indexing later than chain genesis (written by

@@ -418,6 +418,12 @@ impl Model {
         } else {
             put(&mut s, META, META_GENESIS_SEEDED, [1]);
             put(&mut s, META, META_EMISSION_TREE_HASH, id(1));
+            put(
+                &mut s,
+                META,
+                META_GENESIS_VALUE_SUM,
+                1_000_000u128.to_be_bytes(),
+            );
         }
         if self.height > 0 {
             put(&mut s, META, META_INDEXED_HEIGHT, self.height.to_be_bytes());

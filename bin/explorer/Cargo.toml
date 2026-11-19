@@ -13,6 +13,8 @@ xp-store.workspace = true
 xp-source.workspace = true
 xp-ingest.workspace = true
 xp-api.workspace = true
+xp-types.workspace = true
+hex.workspace = true
 tokio = { workspace = true, features = ["rt-multi-thread", "macros", "signal"] }
 tokio-util.workspace = true
 axum.workspace = true

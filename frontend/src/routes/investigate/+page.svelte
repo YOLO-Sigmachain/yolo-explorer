@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { SITE_NAME } from '$lib/chain';
 	import { page } from '$app/state';
 	import InvestigationGraph from '$lib/components/InvestigationGraph.svelte';
 	import { decodePlan, seedRef, type Plan } from '$lib/investigation/graph';
@@ -26,7 +27,7 @@
 </script>
 
 <svelte:head
-	><title>Investigate — Kadia</title><meta
+	><title>Investigate — {SITE_NAME}</title><meta
 		name="description"
 		content="Follow indexed transaction and box references in an explicit, bounded investigation."
 	/></svelte:head

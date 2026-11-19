@@ -1,5 +1,6 @@
 import { health } from './health';
 import { api } from '$lib/api/endpoints';
+import { warnOnChainMismatch } from '$lib/chain';
 import type { StatusDto } from '$lib/api/types';
 
 const POLL_MS = 5_000;
@@ -18,6 +19,7 @@ async function poll(): Promise<void> {
 	inFlight = true;
 	try {
 		current = await api.status();
+		warnOnChainMismatch(current.chain);
 		lastSuccess = Date.now();
 		now = lastSuccess;
 		error = null;

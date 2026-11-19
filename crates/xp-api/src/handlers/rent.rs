@@ -59,7 +59,11 @@ pub async fn upcoming(
     Query(p): Query<RentUpcomingParams>,
 ) -> Result<Json<UpcomingDto>, ApiError> {
     let limit = parse_limit(p.limit.as_deref())?;
-    let blocks = parse_u32_param(p.blocks.as_deref(), "blocks", DEFAULT_UPCOMING_BLOCKS)?;
+    let blocks = parse_u32_param(
+        p.blocks.as_deref(),
+        "blocks",
+        xp_types::chain::get().blocks_per_day(),
+    )?;
     let page = blocking(&state, move |rd| {
         let emission = rd.emission_tree_hash()?;
         let tip = rd.indexed_height()?;
@@ -110,7 +114,10 @@ pub async fn eligible(
 
 /// Maximum candidate boxes examined by one schedule request, including filter misses.
 pub const SCHEDULE_SCAN_LIMIT: usize = 2_000;
-const TARGET_BLOCK_SECONDS: u64 = 120;
+/// Target block time of the active chain (120 s on Ergo mainnet).
+fn target_block_seconds() -> u64 {
+    xp_types::chain::get().block_seconds
+}
 const MAX_DATE_MS: u64 = 8_640_000_000_000_000;
 const BATCH_SCAN_LIMIT: usize = 50_000;
 const BATCH_DECODE_LIMIT: usize = 16 * 1024 * 1024;
@@ -335,7 +342,7 @@ fn schedule_batches(
             if schedule_matches(&row, &facts, filter) {
                 let estimated = timestamp
                     + u64::from(candidate.maturity_height - (from_height - 1))
-                        * TARGET_BLOCK_SECONDS
+                        * target_block_seconds()
                         * 1_000;
                 let total = totals.entry(estimated / 3_600_000 * 3_600_000).or_default();
                 total.boxes += 1;
@@ -419,11 +426,13 @@ pub async fn schedule(
     State(state): State<AppState>,
     Query(mut p): Query<ScheduleParams>,
 ) -> Result<Response, ApiError> {
+    // Windows are wall-clock spans; a day is 720 blocks on Ergo mainnet.
+    let day = xp_types::chain::get().blocks_per_day();
     let (window, blocks) = match p.window.as_deref().unwrap_or("24h") {
-        "24h" => ("24h", 720u32),
-        "7d" => ("7d", 5_040),
-        "30d" => ("30d", 21_600),
-        "90d" => ("90d", 64_800),
+        "24h" => ("24h", day),
+        "7d" => ("7d", day.saturating_mul(7)),
+        "30d" => ("30d", day.saturating_mul(30)),
+        "90d" => ("90d", day.saturating_mul(90)),
         _ => {
             return Err(ApiError::BadRequest(
                 "window must be 24h, 7d, 30d or 90d".into(),
@@ -480,7 +489,7 @@ pub async fn schedule(
         let to_height = height.saturating_add(blocks);
         let projected_end = header
             .timestamp
-            .checked_add(u64::from(to_height - height) * TARGET_BLOCK_SECONDS * 1_000)
+            .checked_add(u64::from(to_height - height) * target_block_seconds() * 1_000)
             .filter(|time| *time <= MAX_DATE_MS);
         if projected_end.is_none() {
             return Err(ApiError::Integrity(
@@ -554,7 +563,7 @@ pub async fn schedule(
                         maturity_height: candidate.maturity_height,
                         estimated_maturity_ms: header.timestamp
                             + u64::from(candidate.maturity_height - height)
-                                * TARGET_BLOCK_SECONDS
+                                * target_block_seconds()
                                 * 1_000,
                         value: row.value.to_string(),
                         consensus_fee_nano: facts.fee.to_string(),
@@ -601,7 +610,7 @@ pub async fn schedule(
                 anchor_timestamp_ms: header.timestamp,
                 from_height,
                 to_height,
-                target_block_seconds: TARGET_BLOCK_SECONDS,
+                target_block_seconds: target_block_seconds(),
                 window,
                 mode,
                 token_id: filter.token_id.as_ref().map(hex32),
@@ -615,7 +624,7 @@ pub async fn schedule(
                 batch_scan_limit: BATCH_SCAN_LIMIT,
                 batch_complete: overview.as_ref().map(|v| v.stop_reason.is_none()),
                 batch_stop_reason: overview.as_ref().and_then(|v| v.stop_reason),
-                rent_factor: xp_types::rent::RENT_PER_BYTE,
+                rent_factor: xp_types::chain::get().rent_per_byte,
                 fee_arithmetic: "wrapping_i32",
             },
             batches: overview.map(|v| v.batches),

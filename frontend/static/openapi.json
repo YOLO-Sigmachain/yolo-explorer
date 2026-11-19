@@ -2577,6 +2577,9 @@
 					},
 					"rate_limited_total": {
 						"type": "number"
+					},
+					"chain": {
+						"$ref": "#/components/schemas/StatusChainDto"
 					}
 				},
 				"required": [
@@ -2605,6 +2608,37 @@
 					}
 				},
 				"required": ["height", "since_secs", "reason"]
+			},
+			"StatusChainDto": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"ticker": {
+						"type": "string"
+					},
+					"address_prefix": {
+						"type": "number"
+					},
+					"block_seconds": {
+						"type": "number"
+					},
+					"blocks_per_day": {
+						"type": "number"
+					},
+					"rent_per_byte": {
+						"type": "number"
+					}
+				},
+				"required": [
+					"name",
+					"ticker",
+					"address_prefix",
+					"block_seconds",
+					"blocks_per_day",
+					"rent_per_byte"
+				]
 			},
 			"MempoolSnapshot": {
 				"type": "object",
@@ -3404,6 +3438,10 @@
 							},
 							{
 								"type": "string",
+								"const": "observed_split_emission"
+							},
+							{
+								"type": "string",
 								"const": "unsupported"
 							}
 						]
@@ -3437,6 +3475,12 @@
 								"type": "null"
 							}
 						]
+					},
+					"treasury_reward": {
+						"type": "string"
+					},
+					"lp_reward": {
+						"type": "string"
 					},
 					"transaction_fees": {
 						"type": "string"

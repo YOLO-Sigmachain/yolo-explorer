@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { SITE_NAME } from '$lib/chain';
 	import { onDestroy, tick } from 'svelte';
 	import {
 		savedAddresses,
@@ -120,7 +121,7 @@
 	}
 </script>
 
-<svelte:head><title>Saved addresses — Kadia</title></svelte:head>
+<svelte:head><title>Saved addresses — {SITE_NAME}</title></svelte:head>
 <section class="saved-workspace">
 	<header class="saved-intro">
 		<p class="eyebrow">Your browser / your labels</p>

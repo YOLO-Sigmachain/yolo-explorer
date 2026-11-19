@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { NANO_UNIT, SITE_NAME, TICKER } from '$lib/chain';
 	import { onDestroy } from 'svelte';
 	import { page } from '$app/state';
 	import { status } from '$lib/status/status.svelte';
@@ -145,9 +146,9 @@
 </script>
 
 <svelte:head
-	><title>API playground — Kadia</title><meta
+	><title>API playground — {SITE_NAME}</title><meta
 		name="description"
-		content="Build read-only Kadia API requests, inspect real responses and learn snapshot-safe pagination."
+		content="Build read-only {SITE_NAME} API requests, inspect real responses and learn snapshot-safe pagination."
 	/></svelte:head
 >
 
@@ -379,8 +380,8 @@
 		<div>
 			<h3>Keep amounts exact</h3>
 			<p>
-				ERG amounts use nanoERG: 1 ERG = 1,000,000,000 nanoERG. Token decimals may be unknown. Keep
-				raw integer strings intact.
+				{TICKER} amounts use {NANO_UNIT}: 1 {TICKER} = 1,000,000,000 {NANO_UNIT}. Token decimals may
+				be unknown. Keep raw integer strings intact.
 			</p>
 		</div>
 		<div>

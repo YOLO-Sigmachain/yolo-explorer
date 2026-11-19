@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { EXPLORER_TITLE } from '$lib/chain';
 	import { untrack } from 'svelte';
 	import { goto } from '$app/navigation';
 	import Panel from '$lib/components/Panel.svelte';
@@ -90,7 +91,7 @@
 </script>
 
 <svelte:head>
-	<title>{query ? `Boxes with ${query.reg} = ${shortValue}` : 'Search'} — Ergo Explorer</title>
+	<title>{query ? `Boxes with ${query.reg} = ${shortValue}` : 'Search'} — {EXPLORER_TITLE}</title>
 </svelte:head>
 
 {#if data.tokenQuery}<TokenDiscovery query={data.tokenQuery} match={data.match} />

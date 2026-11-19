@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { NANO_UNIT, TICKER } from '$lib/chain';
 	import { onDestroy, untrack } from 'svelte';
 	import { SvelteURL } from 'svelte/reactivity';
 	import { goto } from '$app/navigation';
@@ -201,7 +202,7 @@
 		<div class="schedule-metrics" aria-label="Window overview">
 			<div>
 				<span>{fullOverview ? 'Window collectible rent' : 'Observed rent'}</span><strong
-					title={`${totals.due} nanoERG`}>{erg(totals.due)} <small>ERG</small></strong
+					title={`${totals.due} ${NANO_UNIT}`}>{erg(totals.due)} <small>{TICKER}</small></strong
 				>
 			</div>
 			<div>
@@ -212,7 +213,7 @@
 			<div>
 				<span>Full-claim candidates</span><strong
 					>{totals.fullClaims.toLocaleString('en-US')}
-					<small>· {erg(totals.fullValue)} ERG</small></strong
+					<small>· {erg(totals.fullValue)} {TICKER}</small></strong
 				>
 			</div>
 			{#if query.token_id}<div class="selected-token-total">
@@ -268,9 +269,9 @@
 							</div>
 							<div class="record-amount">
 								<span>Collectible charge</span><strong
-									title={`${item.collectible_due_nano} nanoERG`}
-									>{erg(item.collectible_due_nano)} <small>ERG</small></strong
-								><span>Box value {erg(item.value)} ERG</span>
+									title={`${item.collectible_due_nano} ${NANO_UNIT}`}
+									>{erg(item.collectible_due_nano)} <small>{TICKER}</small></strong
+								><span>Box value {erg(item.value)} {TICKER}</span>
 							</div>
 							{#if item.tokens.length > 0}<div class="record-tokens">
 									<span
@@ -347,7 +348,7 @@
 				>
 				<p class="batch-note">
 					Independent of the {schedule.items.length} loaded records. Full-claim value is included in collectible
-					ERG.
+					{TICKER}.
 				</p>
 				<ol class="batch-list">
 					{#each ranked as batch, index (batch.estimated_hour_start_ms)}
@@ -359,7 +360,7 @@
 										>{query.window === '24h'
 											? utc(batch.estimated_hour_start_ms)
 											: day(batch.estimated_hour_start_ms)} UTC</time
-									><strong>{erg(batch.collectible_due_nano)} <small>ERG</small></strong>
+									><strong>{erg(batch.collectible_due_nano)} <small>{TICKER}</small></strong>
 								</div>
 							</div>
 							<div class="batch-bar" aria-hidden="true">
@@ -370,7 +371,7 @@
 									'en-US'
 								)} full candidates
 							</p>
-							<p>Full-claim value: {erg(batch.full_claim_value_nano)} ERG</p>
+							<p>Full-claim value: {erg(batch.full_claim_value_nano)} {TICKER}</p>
 							{#if batch.selected_token_full_claim_amount !== null}<p>
 									Selected token: <strong
 										>{formatNano(batch.selected_token_full_claim_amount)}</strong
@@ -382,10 +383,11 @@
 										{#each batch.hours as part (part.estimated_hour_start_ms)}<li>
 												<time datetime={new Date(part.estimated_hour_start_ms).toISOString()}
 													>{hour(part.estimated_hour_start_ms)} UTC</time
-												><strong>{erg(part.collectible_due_nano)} ERG</strong><span
+												><strong>{erg(part.collectible_due_nano)} {TICKER}</strong><span
 													>{part.box_count} boxes · {part.full_claim_count} full candidates · {erg(
 														part.full_claim_value_nano
-													)} ERG full-claim value</span
+													)}
+													{TICKER} full-claim value</span
 												>{#if part.selected_token_full_claim_amount !== null}<span
 														>{formatNano(part.selected_token_full_claim_amount)} selected-token raw units
 														in full claims</span
@@ -413,14 +415,15 @@
 				Dates use the indexed block timestamp plus {context.target_block_seconds} seconds per block, not
 				a guaranteed time. Current unspent boxes may move before maturity. A positive consensus fee is
 				capped by the box value; non-positive fees and known protocol-constrained re-emission boxes are
-				excluded. A full-claim candidate has a fee covering its complete ERG value and may release its
-				tokens, but this is not proof a claim transaction will execute. Token names are metadata, not
-				verified identity; token IDs and raw units are authoritative.
+				excluded. A full-claim candidate has a fee covering its complete {TICKER} value and may release
+				its tokens, but this is not proof a claim transaction will execute. Token names are metadata,
+				not verified identity; token IDs and raw units are authoritative.
 			</p>
 			<p>
 				Fee projection assumes the current default rent factor of {context.rent_factor.toLocaleString(
 					'en-US'
-				)} nanoERG per serialized byte, using signed 32-bit wrapping arithmetic ({context.fee_arithmetic}).
+				)}
+				{NANO_UNIT} per serialized byte, using signed 32-bit wrapping arithmetic ({context.fee_arithmetic}).
 				It is not a forecast of future protocol parameters.
 			</p>
 			<p>

@@ -1,4 +1,5 @@
 import type { BlockDto } from '$lib/api/types';
+import { BLOCK_SECONDS } from '$lib/chain';
 
 /**
  * Bucketing for the home page's shapes.
@@ -50,12 +51,12 @@ export function sumNano(blocks: BlockDto[], field: 'fees' | 'reward'): bigint {
 }
 
 /**
- * Hashrate implied by a header's difficulty: `difficulty / block time`, with Ergo's 120 s
+ * Hashrate implied by a header's difficulty: `difficulty / block time`, with the chain's
  * target as the block time. This is the standard estimator — it says what hashrate would, on
  * average, produce this difficulty at the target interval — and it is stated as such wherever
  * the number is shown.
  */
-export const TARGET_BLOCK_SECONDS = 120;
+export const TARGET_BLOCK_SECONDS = BLOCK_SECONDS;
 
 export function hashrateHs(difficulty: string): number {
 	return Number(BigInt(difficulty) / BigInt(TARGET_BLOCK_SECONDS));

@@ -1,4 +1,5 @@
 import type { TxDto, TxEvidence } from '$lib/api/types';
+import { TICKER } from '$lib/chain';
 
 export const RENT_PERIOD = 1_051_200;
 export type TxKind = 'rent' | 'token' | 'payment' | 'emission' | 'fee' | 'unknown';
@@ -125,7 +126,7 @@ export function txKind(tx: TxDto, evidence?: TxEvidence | null): TxKindInfo {
 	}
 	return {
 		kind: 'payment',
-		label: 'ERG transfer',
-		why: 'Resolved P2PK inputs and ERG-only outputs. Address deltas include change; ownership and payment intent are not inferred.'
+		label: `${TICKER} transfer`,
+		why: `Resolved P2PK inputs and ${TICKER}-only outputs. Address deltas include change; ownership and payment intent are not inferred.`
 	};
 }

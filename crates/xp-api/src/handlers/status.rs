@@ -25,5 +25,6 @@ pub async fn status(State(state): State<AppState>) -> Result<Json<StatusDto>, Ap
         stalled: s.stalled.as_ref().map(stalled_dto),
         inflight_reads: state.counters.inflight_reads.load(Ordering::Relaxed),
         rate_limited_total: state.counters.rate_limited_total.load(Ordering::Relaxed),
+        chain: crate::dto::ChainDto::current(),
     }))
 }

@@ -68,6 +68,31 @@
 		white-space: nowrap;
 	}
 
+	/* A build without the mark (VITE_SHOW_ERGO_LOGO=0) has only the site name to show in the
+	   narrow rail, so it stays on screen, shortened to fit. */
+	:root[data-appearance='aurora'] .rail .brand.no-mark {
+		max-width: 100%;
+	}
+
+	:root[data-appearance='aurora'] .rail .brand.no-mark .wordmark {
+		position: static;
+		width: auto;
+		height: auto;
+		max-width: 100%;
+		margin: 0;
+		clip-path: none;
+	}
+
+	:root[data-appearance='aurora'] .rail .brand.no-mark .name {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		font-size: 18px;
+	}
+
+	:root[data-appearance='aurora'] .rail .brand.no-mark .sub {
+		display: none;
+	}
+
 	:root[data-appearance='aurora'] .nav {
 		width: 100%;
 	}

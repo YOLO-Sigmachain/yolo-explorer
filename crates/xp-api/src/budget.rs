@@ -22,13 +22,20 @@ pub(crate) fn limit(code: &'static str) -> ApiError {
 pub(crate) struct Budget {
     work: usize,
     decoded_bytes: usize,
+    max_decoded_bytes: usize,
     deadline: Instant,
 }
 impl Budget {
     pub(crate) fn new() -> Self {
+        Self::with_decode_limit(MAX_BYTES)
+    }
+    /// A budget whose decode allowance differs from [`MAX_BYTES`]; work and deadline are
+    /// unchanged.
+    pub(crate) fn with_decode_limit(max_decoded_bytes: usize) -> Self {
         Self {
             work: 0,
             decoded_bytes: 0,
+            max_decoded_bytes,
             deadline: Instant::now() + DEADLINE,
         }
     }
@@ -75,7 +82,7 @@ impl Budget {
         self.decoded_bytes = self
             .decoded_bytes
             .checked_add(bytes)
-            .filter(|n| *n <= MAX_BYTES)
+            .filter(|n| *n <= self.max_decoded_bytes)
             .ok_or_else(|| limit("expansion_decode_limit"))?;
         Ok(())
     }

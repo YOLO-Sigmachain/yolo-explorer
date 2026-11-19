@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { CHAIN_MARK, TICKER } from '$lib/chain';
 	import { untrack } from 'svelte';
 	import type { TxDto, TxEvidence } from '$lib/api/types';
 	import { api } from '$lib/api/endpoints';
@@ -199,21 +200,21 @@
 					{/each}
 				{:else}
 					<div class="asset">
-						<div class="asset-icon">Σ</div>
+						<div class="asset-icon">{CHAIN_MARK}</div>
 						<div class="asset-value">
 							<p class="amount" class:negative={selected.erg < 0n}>{signedErg(selected.erg)}</p>
-							<p class="asset-name">ERG</p>
+							<p class="asset-name">{TICKER}</p>
 						</div>
 					</div>
 				{/if}
 				<div class="receipt-facts">
 					<div>
-						<p>ERG balance change</p>
-						<strong class:negative={selected.erg < 0n}>{signedErg(selected.erg)} ERG</strong>
+						<p>{TICKER} balance change</p>
+						<strong class:negative={selected.erg < 0n}>{signedErg(selected.erg)} {TICKER}</strong>
 					</div>
 					<div>
 						<p>Fee for the entire transaction</p>
-						<strong>{formatErg(tx.fee)} ERG</strong>
+						<strong>{formatErg(tx.fee)} {TICKER}</strong>
 					</div>
 				</div>
 				<p class="explanation">
@@ -276,7 +277,7 @@
 							/>
 						</div>
 						<div class="deltas">
-							<p class:loss={address.erg < 0n}>{signedErg(address.erg)} ERG</p>
+							<p class:loss={address.erg < 0n}>{signedErg(address.erg)} {TICKER}</p>
 							{#each address.tokens as token (token.id)}<p class:loss={token.amount < 0n}>
 									<a href={`/token/${token.id}`}
 										>{tokenAmount(token.amount, token.decimals)}
@@ -289,8 +290,8 @@
 			</div>
 			<p class="notice">
 				{effects.ergTotal === 0n
-					? 'All ERG changes sum to zero.'
-					: 'ERG totals do not reconcile; inspect the raw boxes.'}
+					? `All ${TICKER} changes sum to zero.`
+					: `${TICKER} totals do not reconcile; inspect the raw boxes.`}
 				{effects.supplyChanges.length === 0
 					? 'Token quantities are conserved.'
 					: 'Token supply changes are listed below.'}

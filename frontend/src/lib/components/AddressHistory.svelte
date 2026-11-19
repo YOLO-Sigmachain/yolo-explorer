@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { NANO_UNIT, TICKER } from '$lib/chain';
 	import { onDestroy, tick, untrack } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
@@ -191,8 +192,8 @@
 			<p class="eyebrow">Historical snapshot</p>
 			<h2>A balance at a block.</h2>
 			<p>
-				Inspect the ERG, raw token quantities and boxes held by this locking script after a chosen
-				block. No wallet ownership is implied.
+				Inspect the {TICKER}, raw token quantities and boxes held by this locking script after a
+				chosen block. No wallet ownership is implied.
 			</p>
 		</div>
 		<span class="history-tag">End-of-block state</span>
@@ -290,8 +291,10 @@
 					<p class="eyebrow">
 						{exact ? 'Complete anchored balance' : 'Loaded boxes only · incomplete'}
 					</p>
-					<p class="history-total"><strong>{formatErg(total.nano)}</strong> <span>ERG</span></p>
-					<p class="raw-nano mono">{total.nano} nanoERG</p>
+					<p class="history-total">
+						<strong>{formatErg(total.nano)}</strong> <span>{TICKER}</span>
+					</p>
+					<p class="raw-nano mono">{total.nano} {NANO_UNIT}</p>
 					<dl class="history-counts">
 						<div>
 							<dt>Unspent boxes{exact ? '' : ' loaded'}</dt>
@@ -371,7 +374,7 @@
 									/>
 								</div>
 								<div class="box-value">
-									<strong>{formatErg(box.nano)} <span>ERG</span></strong>
+									<strong>{formatErg(box.nano)} <span>{TICKER}</span></strong>
 									<p>
 										Included {box.inclusion_height === 0
 											? 'at genesis'
@@ -489,8 +492,10 @@
 									? 'Genesis'
 									: `After block ${entry.point.at.height.toLocaleString('en-US')}`}
 							</p>
-							<p class="history-total">{formatErg(entry.point.balance.nano)} <span>ERG</span></p>
-							<p class="raw-nano mono">{entry.point.balance.nano} nanoERG</p>
+							<p class="history-total">
+								{formatErg(entry.point.balance.nano)} <span>{TICKER}</span>
+							</p>
+							<p class="raw-nano mono">{entry.point.balance.nano} {NANO_UNIT}</p>
 							<p class="point-count">
 								{entry.point.balance.box_count.toLocaleString('en-US')} unspent boxes
 							</p>
@@ -505,9 +510,9 @@
 						<p class="eyebrow">After minus before</p>
 						<p class="history-total">
 							{BigInt(comparison.changes.nano) > 0n ? '+' : ''}{formatErg(comparison.changes.nano)}
-							<span>ERG</span>
+							<span>{TICKER}</span>
 						</p>
-						<p class="raw-nano mono">{comparison.changes.nano} nanoERG difference</p>
+						<p class="raw-nano mono">{comparison.changes.nano} {NANO_UNIT} difference</p>
 						<p class="point-count">
 							{BigInt(comparison.changes.box_count) > 0n ? '+' : ''}{formatNano(
 								comparison.changes.box_count

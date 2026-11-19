@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { EXPLORER_TITLE } from '$lib/chain';
 	import Panel from '$lib/components/Panel.svelte';
 	import PageHead from '$lib/components/PageHead.svelte';
 	import Facts from '$lib/components/Facts.svelte';
@@ -66,7 +67,7 @@
 
 <svelte:head>
 	<title
-		>{template ? `Script template ${truncateMiddle(hash)}` : 'Script template not found'} — Ergo Explorer</title
+		>{template ? `Script template ${truncateMiddle(hash)}` : 'Script template not found'} — {EXPLORER_TITLE}</title
 	>
 </svelte:head>
 

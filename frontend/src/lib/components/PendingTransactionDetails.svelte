@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { NANO_UNIT, TICKER } from '$lib/chain';
 	import type { TxStatusDto } from '$lib/api/types';
 	import { validatePendingDetails } from '$lib/tx/pending';
 	import { formatErg, formatNano } from '$lib/format/amount';
@@ -51,7 +52,7 @@
 							<div class="output-heading">
 								<strong>Output {output.index + 1}</strong><span
 									class="output-value"
-									title={output.value + ' nanoERG'}>{formatErg(output.value)} ERG</span
+									title={output.value + ' ' + NANO_UNIT}>{formatErg(output.value)} {TICKER}</span
 								>
 							</div>
 							{#if output.id}<a
@@ -87,7 +88,7 @@
 								<dl>
 									<div>
 										<dt>Value</dt>
-										<dd>{formatNano(output.value)} nanoERG</dd>
+										<dd>{formatNano(output.value)} {NANO_UNIT}</dd>
 									</div>
 									{#if output.address}<div>
 											<dt>Derived output address</dt>

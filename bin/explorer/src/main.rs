@@ -195,6 +195,21 @@ async fn run(config_path: PathBuf) -> anyhow::Result<i32> {
 
     std::fs::create_dir_all(&cfg.data_dir)
         .with_context(|| format!("creating data_dir {}", cfg.data_dir.display()))?;
+    let chain = cfg.chain_profile().context("reading [chain] config")?;
+    config::check_chain_marker(&cfg.data_dir, &chain.name, chain.address_prefix)?;
+    info!(
+        chain = %chain.name,
+        ticker = %chain.ticker,
+        address_prefix = chain.address_prefix,
+        block_seconds = chain.block_seconds,
+        rent_per_byte = chain.rent_per_byte,
+        split_emission = chain.split_emission.is_some(),
+        "chain profile"
+    );
+    anyhow::ensure!(
+        xp_types::chain::set(chain),
+        "chain profile was already initialised"
+    );
     let db_path = cfg.data_dir.join("explorer.redb");
 
     info!(

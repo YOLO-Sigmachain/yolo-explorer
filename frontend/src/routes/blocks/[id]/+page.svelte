@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { EXPLORER_TITLE } from '$lib/chain';
 	import Panel from '$lib/components/Panel.svelte';
 	import PageHead from '$lib/components/PageHead.svelte';
 	import Facts from '$lib/components/Facts.svelte';
@@ -20,7 +21,7 @@
 </script>
 
 <svelte:head>
-	<title>Block {block.height} — Ergo Explorer</title>
+	<title>Block {block.height} — {EXPLORER_TITLE}</title>
 </svelte:head>
 
 <div class="head">
@@ -69,6 +70,16 @@
 			<div class="net">
 				<span>Miner subsidy</span><strong><Amount nano={reward.miner_subsidy!} /></strong>
 			</div>
+			{#if reward.treasury_reward != null}
+				<div>
+					<span>Treasury</span><strong><Amount nano={reward.treasury_reward} /></strong>
+				</div>
+			{/if}
+			{#if reward.lp_reward != null}
+				<div>
+					<span>Liquidity fund</span><strong><Amount nano={reward.lp_reward} /></strong>
+				</div>
+			{/if}
 		</div>
 		<p class="reward-note">{reward.note}</p>
 		<p class="reward-source">
@@ -82,6 +93,34 @@
 				rel="noreferrer">EIP-27 definition</a
 			>
 		</p>
+	{:else if data.rewards.data?.basis === 'observed_split_emission'}
+		{@const reward = data.rewards.data}
+		<div class="reward-equation">
+			{#if reward.miner_subsidy != null}
+				<div class="net">
+					<span>Miner subsidy</span><strong><Amount nano={reward.miner_subsidy} /></strong>
+				</div>
+			{/if}
+			{#if reward.treasury_reward != null}
+				<div>
+					<span>Treasury</span><strong><Amount nano={reward.treasury_reward} /></strong>
+				</div>
+			{/if}
+			{#if reward.lp_reward != null}
+				<div>
+					<span>Liquidity fund</span><strong><Amount nano={reward.lp_reward} /></strong>
+				</div>
+			{/if}
+		</div>
+		<p class="reward-note">{reward.note}</p>
+		{#if reward.reward_box_id}
+			<p class="reward-source">
+				Observed reward box: <Hash
+					value={reward.reward_box_id}
+					href={`/box/${reward.reward_box_id}`}
+				/>
+			</p>
+		{/if}
 	{:else}
 		<p class="reward-note">
 			{data.rewards.data?.note ?? 'Reward evidence is unavailable for this block.'}

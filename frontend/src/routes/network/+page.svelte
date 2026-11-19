@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { BLOCKS_PER_DAY, CHAIN_NAME, NANO_UNIT, SITE_NAME, TICKER } from '$lib/chain';
 	import { onDestroy } from 'svelte';
 	import { page } from '$app/state';
 	import { status } from '$lib/status/status.svelte';
@@ -20,7 +21,7 @@
 	let metric = $state<NetworkMetric>('transaction_count');
 	const metrics: { key: NetworkMetric; title: string; unit: string }[] = [
 		{ key: 'transaction_count', title: 'Transactions', unit: 'transactions' },
-		{ key: 'fees', title: 'Transaction fees', unit: 'nanoERG' },
+		{ key: 'fees', title: 'Transaction fees', unit: NANO_UNIT },
 		{ key: 'size_bytes', title: 'Block size', unit: 'bytes' },
 		{ key: 'difficulty_end', title: 'End-block difficulty', unit: 'difficulty' }
 	];
@@ -63,7 +64,7 @@
 		if (tip == null || tip < 1) return;
 		changed();
 		to = String(tip);
-		from = String(Math.max(1, tip - 719));
+		from = String(Math.max(1, tip - (BLOCKS_PER_DAY - 1)));
 	}
 	function load(event: SubmitEvent) {
 		event.preventDefault();
@@ -85,9 +86,9 @@
 </script>
 
 <svelte:head
-	><title>Network history — Kadia Explorer</title><meta
+	><title>Network history — {SITE_NAME} Explorer</title><meta
 		name="description"
-		content="Inspect exact transaction, fee, block-size and difficulty history across a bounded range of indexed Ergo blocks."
+		content="Inspect exact transaction, fee, block-size and difficulty history across a bounded range of indexed {CHAIN_NAME} blocks."
 	/></svelte:head
 >
 <div class="network-history">
@@ -133,7 +134,7 @@
 				class="secondary"
 				onclick={recent}
 				disabled={!status.current?.indexed}
-				aria-label="Use latest 720 blocks">Latest 720 blocks</button
+				aria-label="Use latest {BLOCKS_PER_DAY} blocks">Latest {BLOCKS_PER_DAY} blocks</button
 			>
 		</div>
 		{#if pin}<p class="pin">
@@ -186,8 +187,8 @@
 				</div>
 				<div><span>Transactions</span><strong>{exact(data.totals.transaction_count)}</strong></div>
 				<div>
-					<span>Transaction fees</span><strong title={data.totals.fees + ' nanoERG'}
-						>{formatErg(data.totals.fees)} <small>ERG</small></strong
+					<span>Transaction fees</span><strong title={data.totals.fees + ' ' + NANO_UNIT}
+						>{formatErg(data.totals.fees)} <small>{TICKER}</small></strong
 					>
 				</div>
 				<div><span>Block bytes</span><strong>{exact(data.totals.size_bytes)}</strong></div>
@@ -243,9 +244,9 @@
 					<table>
 						<thead
 							><tr
-								><th>Block range</th><th>Blocks</th><th>Transactions</th><th>Fees (nanoERG)</th><th
-									>Bytes</th
-								><th>Difficulty end</th><th>Difficulty min / max</th><th>Header time span (UTC)</th
+								><th>Block range</th><th>Blocks</th><th>Transactions</th><th>Fees ({NANO_UNIT})</th
+								><th>Bytes</th><th>Difficulty end</th><th>Difficulty min / max</th><th
+									>Header time span (UTC)</th
 								></tr
 							></thead
 						><tbody
@@ -271,7 +272,7 @@
 				<p>
 					Bars start at zero and scale to this range’s maximum. Difficulty is the last block’s exact
 					value in each bucket; the table also shows its minimum and maximum. Height spacing does
-					not imply equal elapsed time. 720 blocks is a count, not a guaranteed day.
+					not imply equal elapsed time. {BLOCKS_PER_DAY} blocks is a count, not a guaranteed day.
 				</p>
 				<p>
 					One snapshot of canonical indexed block headers, observed at indexed height {data.indexed_height.toLocaleString(
@@ -293,8 +294,8 @@
 	{:else if !historyState.loading && !localError && !historyState.error}<section class="empty">
 			<h2>Choose the blocks to compare.</h2>
 			<p>
-				Set an inclusive height range or use the latest indexed 720 blocks. Shareable pinned links
-				keep the same end-block identity and ask the viewer to load explicitly.
+				Set an inclusive height range or use the latest indexed {BLOCKS_PER_DAY} blocks. Shareable pinned
+				links keep the same end-block identity and ask the viewer to load explicitly.
 			</p>
 		</section>{/if}
 </div>

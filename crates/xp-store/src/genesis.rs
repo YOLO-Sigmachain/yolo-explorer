@@ -156,6 +156,8 @@ impl Store {
             if let Some(emission) = boxes.iter().max_by_key(|b| b.value) {
                 meta.insert(META_EMISSION_TREE_HASH, emission.tree_hash.0.as_slice())?;
             }
+            let value_sum: u128 = boxes.iter().map(|b| u128::from(b.value)).sum();
+            meta.insert(META_GENESIS_VALUE_SUM, value_sum.to_be_bytes().as_slice())?;
             meta.insert(META_NEXT_BOX_GIDX, k_u64(next_box).as_slice())?;
             meta.insert(META_GENESIS_SEEDED, &[1u8][..])?;
         }

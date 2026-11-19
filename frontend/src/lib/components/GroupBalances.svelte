@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { CHAIN_MARK, NANO_UNIT, TICKER } from '$lib/chain';
 	import { onDestroy, onMount, untrack } from 'svelte';
 	import { createGroupBalances, type GroupState } from '$lib/addresses/groups';
 	import { createBalanceWatch, emptyWatch, MAX_WATCH_EVENTS } from '$lib/addresses/watch';
@@ -151,8 +152,8 @@
 										>{/if}
 								</div>{/if}
 							{#if event.change}<p class="watch-delta">
-									<strong>{signed(event.change.nano, true)} ERG</strong><span
-										>{signed(event.change.nano)} nanoERG · exact observed difference</span
+									<strong>{signed(event.change.nano, true)} {TICKER}</strong><span
+										>{signed(event.change.nano)} {NANO_UNIT} · exact observed difference</span
 									>
 								</p>
 								<ul class="token-changes">
@@ -211,9 +212,9 @@
 								: 'Combined balance unavailable'}
 					</p>
 					{#if totals}<p class="erg-total">
-							<strong>{formatErg(totals.nano)}</strong> <span>ERG</span>
+							<strong>{formatErg(totals.nano)}</strong> <span>{TICKER}</span>
 						</p>
-						<p class="raw-total">{formatNano(totals.nano)} nanoERG · exact</p>
+						<p class="raw-total">{formatNano(totals.nano)} {NANO_UNIT} · exact</p>
 					{:else}<p class="unavailable">Some addresses could not be resolved.</p>
 						<p class="raw-total">
 							Unseen or invalid addresses are not treated as zero. Individual indexed balances
@@ -287,8 +288,8 @@
 								</div>
 							</div>
 							<div class="member-value">
-								{#if member.balance}<strong>{formatErg(member.balance.nano)} ERG</strong><small
-										>{formatNano(member.balance.nano)} nanoERG</small
+								{#if member.balance}<strong>{formatErg(member.balance.nano)} {TICKER}</strong><small
+										>{formatNano(member.balance.nano)} {NANO_UNIT}</small
 									><span
 										>{result.full_history ? 'Indexed balance' : 'Observed only'} · {member.balance
 											.tokens.length} token IDs</span
@@ -330,10 +331,10 @@
 			</div>
 		</div>
 	{:else if !groupState.busy && !groupState.error}<div class="unloaded">
-			<span class="unloaded-mark" aria-hidden="true">Σ</span>
+			<span class="unloaded-mark" aria-hidden="true">{CHAIN_MARK}</span>
 			<p>
 				{items.length
-					? 'Load this selection to compare member balances and see exact combined ERG and token quantities.'
+					? `Load this selection to compare member balances and see exact combined ${TICKER} and token quantities.`
 					: 'Choose a group or local filter with saved addresses to load balances.'}
 			</p>
 		</div>{/if}

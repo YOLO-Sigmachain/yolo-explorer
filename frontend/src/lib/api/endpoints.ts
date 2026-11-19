@@ -1,4 +1,5 @@
 import { apiGet } from './client';
+import { BLOCKS_PER_DAY } from '$lib/chain';
 import type {
 	AddressDto,
 	AddressActivityFilters,
@@ -128,7 +129,7 @@ export const api = {
 			f
 		),
 
-	rentUpcoming: (blocks = 720, limit = 50, f?: Fetch) =>
+	rentUpcoming: (blocks = BLOCKS_PER_DAY, limit = 50, f?: Fetch) =>
 		apiGet<PageDto<RentItemDto> & { complete?: boolean; indexed_height?: number | null }>(
 			'/rent/upcoming',
 			{ blocks, limit },

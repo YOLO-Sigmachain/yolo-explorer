@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { EXPLORER_TITLE, TICKER } from '$lib/chain';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import Panel from '$lib/components/Panel.svelte';
@@ -47,7 +48,7 @@
 	);
 </script>
 
-<svelte:head><title>Rent calendar — Ergo Explorer</title></svelte:head>
+<svelte:head><title>Rent calendar — {EXPLORER_TITLE}</title></svelte:head>
 
 <Panel title="Rent">
 	<Tabs tabs={TABS} {active} onchange={selectTab} label="Rent sections" />
@@ -57,9 +58,8 @@
 		{:else}
 			{#if eligiblePager.items.length > 0}<p class="sum">
 					{eligiblePager.items.length} boxes{#if !eligiblePager.done}&nbsp;loaded so far{/if}, total
-					due <span class="mono">{eligibleTotalDue}</span> ERG{#if eligibleUncollectible > 0}<span
-							class="note"
-						>
+					due <span class="mono">{eligibleTotalDue}</span>
+					{TICKER}{#if eligibleUncollectible > 0}<span class="note">
 							— excludes {eligibleUncollectible} boxes whose consensus fee is non-positive</span
 						>{/if}
 				</p>{/if}

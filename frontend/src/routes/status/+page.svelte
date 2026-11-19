@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { EXPLORER_TITLE } from '$lib/chain';
 	import Panel from '$lib/components/Panel.svelte';
 	import Table from '$lib/components/Table.svelte';
 	import Badge from '$lib/components/Badge.svelte';
@@ -21,7 +22,7 @@
 </script>
 
 <svelte:head>
-	<title>Status — Ergo Explorer</title>
+	<title>Status — {EXPLORER_TITLE}</title>
 </svelte:head>
 
 <Panel title="Indexer status">

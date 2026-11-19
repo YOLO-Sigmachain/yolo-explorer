@@ -1,4 +1,5 @@
 import type { AddressActivityDto, AddressActivityFilters, PageDto } from '$lib/api/types';
+import { TICKER } from '$lib/chain';
 
 export const MAX_ACTIVITY_ITEMS = 500;
 export const MAX_CSV_ROWS = 5000;
@@ -41,7 +42,7 @@ export function parseActivityFilters(params: URLSearchParams): {
 	const asset = params.get('asset')?.trim().toLowerCase() || 'all';
 	const direction = params.get('direction') || 'all';
 	if (asset !== 'all' && asset !== 'erg' && !/^[a-f0-9]{64}$/.test(asset))
-		return { filters: {}, error: 'Choose ERG, all assets, or a 64-character token ID.' };
+		return { filters: {}, error: `Choose ${TICKER}, all assets, or a 64-character token ID.` };
 	if (!DIRECTIONS.includes(direction as (typeof DIRECTIONS)[number]))
 		return { filters: {}, error: 'Choose a valid activity direction.' };
 	const filters: AddressActivityFilters = {
@@ -125,7 +126,7 @@ export function activityCsv(
 	const encoder = new TextEncoder();
 	let bytes = encoder.encode(lines[0] + '\r\n').length;
 	for (const item of items) {
-		const assets = [{ id: '', name: 'ERG', decimals: 9, delta: item.erg_delta }, ...item.tokens];
+		const assets = [{ id: '', name: TICKER, decimals: 9, delta: item.erg_delta }, ...item.tokens];
 		for (const asset of assets) {
 			const values = [
 				address,
@@ -138,7 +139,7 @@ export function activityCsv(
 				String(item.coverage.complete),
 				String(item.coverage.resolved_inputs),
 				String(item.coverage.total_inputs),
-				asset.id ? 'token' : 'ERG',
+				asset.id ? 'token' : TICKER,
 				asset.id,
 				asset.name ?? '',
 				item.coverage.complete ? (asset.delta ?? '') : '',

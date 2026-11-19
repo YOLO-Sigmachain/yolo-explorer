@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { EXPLORER_TITLE, NANO_UNIT, TICKER } from '$lib/chain';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import Panel from '$lib/components/Panel.svelte';
@@ -105,7 +106,7 @@
 </script>
 
 <svelte:head>
-	<title>Address {truncateMiddle(addr, 10, 8)} — Ergo Explorer</title>
+	<title>Address {truncateMiddle(addr, 10, 8)} — {EXPLORER_TITLE}</title>
 </svelte:head>
 
 {#if info === null}
@@ -121,8 +122,8 @@
 		<header class="address-masthead">
 			<div class="address-title">
 				<h1>Address</h1>
-				<span class="address-balance" title={`${info.balance.nano} nanoERG`}
-					>{formatErg(info.balance.nano, { maxFrac: 9 })}<small>ERG</small></span
+				<span class="address-balance" title={`${info.balance.nano} ${NANO_UNIT}`}
+					>{formatErg(info.balance.nano, { maxFrac: 9 })}<small>{TICKER}</small></span
 				>
 			</div>
 			<div class="address-tools"><SaveAddress address={info.address} compact /></div>
@@ -267,7 +268,8 @@
 					{#if unspentPager.items.length > 0}
 						<p class="sum">
 							Total{#if !unspentPager.done}&nbsp;loaded so far{/if}:
-							<span class="mono">{unspentTotal}</span> ERG
+							<span class="mono">{unspentTotal}</span>
+							{TICKER}
 						</p>
 					{/if}
 				{:else}

@@ -1,4 +1,5 @@
 import { api } from '$lib/api/endpoints';
+import { BLOCK_SECONDS } from '$lib/chain';
 import { ApiError } from '$lib/api/client';
 import type {
 	RentScheduleBatchDto,
@@ -77,7 +78,7 @@ export function validateSchedule(
 		context.from_height !== page.anchor.height + 1 ||
 		!integer(context.to_height) ||
 		context.to_height < context.from_height ||
-		context.target_block_seconds !== 120 ||
+		context.target_block_seconds !== BLOCK_SECONDS ||
 		!timestamp(context.anchor_timestamp_ms) ||
 		context.window !== query.window ||
 		context.mode !== query.mode ||
@@ -114,7 +115,8 @@ export function validateSchedule(
 			item.maturity_height > context.to_height ||
 			!timestamp(item.estimated_maturity_ms) ||
 			item.estimated_maturity_ms !==
-				context.anchor_timestamp_ms + (item.maturity_height - page.anchor!.height) * 120_000 ||
+				context.anchor_timestamp_ms +
+					(item.maturity_height - page.anchor!.height) * BLOCK_SECONDS * 1000 ||
 			!amount(item.value) ||
 			!amount(item.collectible_due_nano) ||
 			!/^(-?(0|[1-9][0-9]{0,9}))$/.test(item.consensus_fee_nano) ||

@@ -29,6 +29,17 @@ export interface StatusDto {
 	stalled: StatusStalledDto | null;
 	inflight_reads: number;
 	rate_limited_total: number;
+	/** Chain identity and parameters; absent on older backends. */
+	chain?: StatusChainDto;
+}
+
+export interface StatusChainDto {
+	name: string;
+	ticker: string;
+	address_prefix: number;
+	block_seconds: number;
+	blocks_per_day: number;
+	rent_per_byte: number;
 }
 
 export interface BlockDto {

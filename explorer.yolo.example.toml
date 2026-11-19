@@ -1,0 +1,32 @@
+# Example settings for a YOLO network. Copy to explorer.toml and fill in the two placeholders.
+# With no [chain] section the indexer uses the built-in Ergo mainnet profile.
+
+data_dir = "./data"
+bind = "127.0.0.1:8090"
+[source]
+kind = "rust_node"
+# REST API of a YOLO node.
+url = "http://127.0.0.1:9053"
+[ingest]
+poll_ms = 500
+bulk_batch = 64
+bulk_concurrency = 8
+durable_every = 256
+tip_lag_for_bulk = 64
+
+[chain]
+# Placeholder: the network name shown in the frontend, for example "yolo-testnet".
+name = "CHAIN_NAME"
+ticker = "YOLO"
+# 16 on a YOLO testnet, 32 on mainnet.
+address_prefix = 16
+block_seconds = 30
+rent_per_byte = 300000
+# Every nanocoin the chain will ever have: the sum of all genesis boxes. Read it from the
+# node's /utxo/genesis. On the test genesis it is 177,291,250 in the emission box, 100 in
+# each of the two fund boxes and 1 in the fourth box.
+genesis_total_nano = 177291451000000000
+miner_lock_blocks = 2880
+# Placeholder: the id of the token in the emission box (64 hex characters), from the
+# first box of the node's /utxo/genesis.
+emission_nft = "EMISSION_NFT_ID"

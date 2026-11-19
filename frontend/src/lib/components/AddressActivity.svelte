@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { NANO_UNIT, TICKER } from '$lib/chain';
 	import { untrack } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
@@ -185,7 +186,7 @@
 	<form class="activity-filters" onsubmit={submit}>
 		<label
 			>Asset<select class="control" bind:value={asset}
-				><option value="all">All assets</option><option value="erg">ERG</option><option
+				><option value="all">All assets</option><option value="erg">{TICKER}</option><option
 					value="token">Token ID</option
 				></select
 			></label
@@ -250,18 +251,19 @@
 				</p>
 			</header>
 			<div class="summary-erg">
-				<p>Net ERG across loaded transactions</p>
+				<p>Net {TICKER} across loaded transactions</p>
 				{#if loadedSummary.nano !== null}<strong class:negative={BigInt(loadedSummary.nano) < 0n}
-						>{signed(loadedSummary.nano)} <span>ERG</span></strong
+						>{signed(loadedSummary.nano)} <span>{TICKER}</span></strong
 					>
-					<p class="summary-raw mono">{loadedSummary.nano} nanoERG</p>{:else}<strong
+					<p class="summary-raw mono">{loadedSummary.nano} {NANO_UNIT}</p>{:else}<strong
 						class="summary-unavailable">Aggregate unavailable</strong
 					>
 					<p>
 						{loadedSummary.unresolved} transaction{loadedSummary.unresolved === 1 ? '' : 's'} lack{loadedSummary.unresolved ===
 						1
 							? 's'
-							: ''} complete input coverage or an ERG delta. Known rows are not summed into a full total.
+							: ''} complete input coverage or a computed {TICKER} delta. Known rows are not summed into
+						a full total.
 					</p>{/if}
 			</div>
 			<dl class="summary-directions">
@@ -332,7 +334,7 @@
 							class="erg-change"
 							class:negative={item.erg_delta !== null && BigInt(item.erg_delta) < 0n}
 						>
-							{item.erg_delta === null ? 'Unknown' : signed(item.erg_delta)} <span>ERG</span>
+							{item.erg_delta === null ? 'Unknown' : signed(item.erg_delta)} <span>{TICKER}</span>
 						</p>
 						{#if item.tokens.length}<ul class="token-changes">
 								{#each item.tokens as token (token.id)}<li>

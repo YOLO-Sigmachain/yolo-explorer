@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { EXPLORER_TITLE } from '$lib/chain';
 	import Panel from '$lib/components/Panel.svelte';
 	import InfiniteList from '$lib/components/InfiniteList.svelte';
 	import Hash from '$lib/components/Hash.svelte';
@@ -15,7 +16,7 @@
 </script>
 
 <svelte:head>
-	<title>Transactions — Ergo Explorer</title>
+	<title>Transactions — {EXPLORER_TITLE}</title>
 </svelte:head>
 
 <Panel title="Transactions">

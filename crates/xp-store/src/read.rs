@@ -6,7 +6,6 @@ use crate::keys::{k_prefix_gidx, k_rent, k_rich, k_u32, k_u64, prefix_range};
 use crate::rows::{BalanceRow, BoxRow, HeaderRow, TreeRow, TxRow};
 use crate::tables::*;
 use crate::{Store, StoreError};
-use ergo_lib::ergotree_ir::chain::address::{AddressEncoder, NetworkPrefix};
 use ergo_lib::ergotree_ir::serialization::SigmaSerializable;
 use redb::{ReadOnlyTable, ReadTransaction, ReadableTable};
 use std::ops::Bound;
@@ -192,6 +191,19 @@ impl Reader {
         let meta = self.txn.open_table(META)?;
         meta.get(META_EMISSION_TREE_HASH)?
             .map(|v| as_hash32(v.value()))
+            .transpose()
+    }
+
+    /// Sum of the chain-spec genesis box values recorded by `Store::seed_genesis`, or
+    /// `None` for a store seeded before the sum was recorded (or never seeded).
+    pub fn genesis_value_sum(&self) -> Result<Option<u128>, StoreError> {
+        let meta = self.txn.open_table(META)?;
+        meta.get(META_GENESIS_VALUE_SUM)?
+            .map(|v| {
+                <[u8; 16]>::try_from(v.value())
+                    .map(u128::from_be_bytes)
+                    .map_err(|_| StoreError::Corrupt("bad meta width"))
+            })
             .transpose()
     }
 
@@ -537,7 +549,7 @@ impl Reader {
     /// unparseable address and one whose tree was never indexed both return `Ok(None)`: the
     /// two cases are not distinguishable through this API.
     pub fn tree_by_address(&self, address: &str) -> Result<Option<Hash32>, StoreError> {
-        let Ok(addr) = AddressEncoder::new(NetworkPrefix::Mainnet).parse_address_from_str(address)
+        let Ok(addr) = xp_wire::tree::parse_address(xp_types::chain::get().address_prefix, address)
         else {
             return Ok(None);
         };

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { ERGO_APPS, EXPLORER_TITLE } from '$lib/chain';
 	import Panel from '$lib/components/Panel.svelte';
 	import PageHead from '$lib/components/PageHead.svelte';
 	import Facts from '$lib/components/Facts.svelte';
@@ -27,8 +28,8 @@
 	let { data }: { data: PageData } = $props();
 
 	const box = $derived(data.box);
-	const applicationOrder = $derived(spectrumOrder(box));
-	const bridgeDeposit = $derived(rosenDeposit(box));
+	const applicationOrder = $derived(ERGO_APPS ? spectrumOrder(box) : null);
+	const bridgeDeposit = $derived(ERGO_APPS ? rosenDeposit(box) : null);
 	const tip = $derived(status.current?.indexed ?? null);
 
 	const hasRegisters = $derived(hasDisplayableRegisters(box.registers));
@@ -41,7 +42,7 @@
 </script>
 
 <svelte:head>
-	<title>Box {box.id} — Ergo Explorer</title>
+	<title>Box {box.id} — {EXPLORER_TITLE}</title>
 </svelte:head>
 
 <div class="head">

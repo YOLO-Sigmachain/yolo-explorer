@@ -1,3 +1,4 @@
+import { BLOCKS_PER_DAY, BLOCK_SECONDS, TICKER } from '$lib/chain';
 /** A curated GET-only request catalog, kept against the current Rust handlers. */
 export interface Field {
 	name: string;
@@ -68,7 +69,8 @@ export const ENDPOINTS: Endpoint[] = [
 		description:
 			'Soonest-first unspent boxes with estimated maturity, exact rent and token details.',
 		note:
-			'First-page hourly totals scan independently of the item cap. Preserve batch_complete and history coverage; a partial overview is not the whole window. Full-claim candidates do not establish transaction validity. Dates use the indexed header and 120-second block target. ' +
+			'First-page hourly totals scan independently of the item cap. Preserve batch_complete and history coverage; a partial overview is not the whole window. Full-claim candidates do not establish transaction validity. ' +
+			`Dates use the indexed header and ${BLOCK_SECONDS}-second block target. ` +
 			strictNote +
 			' ' +
 			amounts
@@ -153,7 +155,7 @@ export const ENDPOINTS: Endpoint[] = [
 		group: 'Network',
 		path: '/network/summary',
 		fields: [],
-		description: 'A compact overview of the latest 720 indexed blocks.',
+		description: `A compact overview of the latest ${BLOCKS_PER_DAY} indexed blocks.`,
 		note: 'Totals describe sampled blocks. The timestamp buckets do not establish complete 24-hour coverage.'
 	},
 	{
@@ -188,7 +190,7 @@ export const ENDPOINTS: Endpoint[] = [
 	},
 	{
 		id: 'supply',
-		name: 'ERG supply',
+		name: `${TICKER} supply`,
 		group: 'Network',
 		path: '/supply',
 		fields: [],
@@ -274,7 +276,7 @@ export const ENDPOINTS: Endpoint[] = [
 			...paging
 		],
 		strict: true,
-		description: 'Exact per-address ERG and token changes with input-coverage evidence.',
+		description: `Exact per-address ${TICKER} and token changes with input-coverage evidence.`,
 		note:
 			'Unknown inputs withhold net amounts. Direction refers to the selected asset; fees are not deducted a second time. Any tip change requires a new walk. ' +
 			strictNote
@@ -354,7 +356,15 @@ export const ENDPOINTS: Endpoint[] = [
 		name: 'Upcoming storage rent',
 		group: 'Protocol',
 		path: '/rent/upcoming',
-		fields: [{ name: 'blocks', label: 'Look-ahead blocks', kind: 'height', initial: '720' }, limit],
+		fields: [
+			{
+				name: 'blocks',
+				label: 'Look-ahead blocks',
+				kind: 'height',
+				initial: String(BLOCKS_PER_DAY)
+			},
+			limit
+		],
 		description: 'A bounded preview of boxes approaching storage-rent maturity.',
 		note: 'Read complete: false means a lower-bound preview even when next_cursor is null. Nominal due is not a collectible opportunity; inspect collectible and consensus_fee_nano.'
 	}

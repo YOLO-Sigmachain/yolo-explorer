@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { EXPLORER_TITLE } from '$lib/chain';
 	import Panel from '$lib/components/Panel.svelte';
 	import InfiniteList from '$lib/components/InfiniteList.svelte';
 	import MinerChip from '$lib/components/MinerChip.svelte';
@@ -19,7 +20,7 @@
 </script>
 
 <svelte:head>
-	<title>Blocks — Ergo Explorer</title>
+	<title>Blocks — {EXPLORER_TITLE}</title>
 </svelte:head>
 
 <Panel title="Blocks">

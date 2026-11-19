@@ -10,5 +10,6 @@ ergo-lib.workspace = true
 tracing.workspace = true
 serde_json.workspace = true
 blake2.workspace = true
+bs58.workspace = true
 hex.workspace = true
 thiserror.workspace = true

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { EXPLORER_TITLE } from '$lib/chain';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import Panel from '$lib/components/Panel.svelte';
@@ -170,7 +171,7 @@
 </script>
 
 <svelte:head>
-	<title>{token ? `${name} — token` : 'Token not found'} — Ergo Explorer</title>
+	<title>{token ? `${name} — token` : 'Token not found'} — {EXPLORER_TITLE}</title>
 </svelte:head>
 
 {#if token === null}

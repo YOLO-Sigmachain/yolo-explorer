@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { NANO_UNIT, TICKER } from '$lib/chain';
 	import type { TrackingState } from '$lib/tx/tracker';
 	import { absTime } from '$lib/format/time';
 	import { formatErg } from '$lib/format/amount';
@@ -189,8 +190,9 @@
 				</div>
 				{#if observation.pending.fee !== null}<div>
 						<dt>Miner-fee outputs</dt>
-						<dd title={observation.pending.fee + ' nanoERG'}>
-							{formatErg(observation.pending.fee)} ERG
+						<dd title={observation.pending.fee + ' ' + NANO_UNIT}>
+							{formatErg(observation.pending.fee)}
+							{TICKER}
 						</dd>
 					</div>{/if}
 				{#if !observation.pending.details}{@render secondaryPendingFacts()}{/if}

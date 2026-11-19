@@ -1,4 +1,5 @@
 import { api } from '$lib/api/endpoints';
+import { BLOCKS_PER_DAY } from '$lib/chain';
 import type {
 	PageDto,
 	RichlistItemDto,
@@ -41,7 +42,7 @@ export const load: PageLoad = async ({ fetch }) => {
 		safe(networkSummary(fetch)),
 		// Compact rows keep the overview independent of transaction expansion budgets.
 		safe<PageDto<TxSummaryDto>>(api.txSummaries(undefined, 6, undefined, fetch)),
-		safe(api.rentUpcoming(720, 5, fetch)),
+		safe(api.rentUpcoming(BLOCKS_PER_DAY, 5, fetch)),
 		safe<TokenInfoDto[]>(topTokens(fetch)),
 		safe<RichlistItemDto[]>(topHolders(fetch)),
 		safe<StatusDto>(api.status(fetch))

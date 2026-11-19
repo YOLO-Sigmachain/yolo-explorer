@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { BLOCKS_PER_DAY, NANO_UNIT, TICKER } from '$lib/chain';
 	import { onDestroy, untrack } from 'svelte';
 	import { SvelteURL } from 'svelte/reactivity';
 	import { goto } from '$app/navigation';
@@ -18,11 +19,16 @@
 	const uid = $props.id();
 	let exposure = $state(emptyExposure());
 	const loader = createExposureLoader((next) => (exposure = next));
-	const horizons = [72, 720, 5040, 20160];
+	const horizons = [
+		Math.round(BLOCKS_PER_DAY / 10),
+		BLOCKS_PER_DAY,
+		BLOCKS_PER_DAY * 7,
+		BLOCKS_PER_DAY * 28
+	];
 	const horizon = $derived(
 		horizons.includes(Number(page.url.searchParams.get('rent_horizon')))
 			? Number(page.url.searchParams.get('rent_horizon'))
-			: 720
+			: BLOCKS_PER_DAY
 	);
 	const category = $derived(page.url.searchParams.get('rent_filter') ?? 'all');
 	let offset = $state(0);
@@ -137,7 +143,9 @@
 					<span>Mature collectible exposure</span><strong
 						>{summary.mature === null
 							? 'Unavailable'
-							: erg(summary.mature)}{#if summary.mature !== null}<small> ERG</small>{/if}</strong
+							: erg(summary.mature)}{#if summary.mature !== null}<small>
+								{TICKER}</small
+							>{/if}</strong
 					><span>{summary.counts.mature} mature and collectible boxes</span>
 				</div>
 				<dl class="primary-totals">
@@ -154,7 +162,9 @@
 							>
 						</dt>
 						<dd>
-							{summary.approaching === null ? 'Unavailable' : `${erg(summary.approaching)} ERG`}
+							{summary.approaching === null
+								? 'Unavailable'
+								: `${erg(summary.approaching)} ${TICKER}`}
 						</dd>
 					</div>
 				</dl>
@@ -178,7 +188,7 @@
 									<div>
 										<span>Potential collectible charge</span><strong
 											>{box.rent.collectible
-												? `${erg(collectibleNano(box))} ERG`
+												? `${erg(collectibleNano(box))} ${TICKER}`
 												: 'Not collectible'}</strong
 										>
 									</div>
@@ -201,15 +211,15 @@
 									<summary>Box evidence</summary>
 									<dl>
 										<div>
-											<dt>Box value · nanoERG</dt>
+											<dt>Box value · {NANO_UNIT}</dt>
 											<dd>{box.value}</dd>
 										</div>
 										<div>
-											<dt>Consensus fee · signed nanoERG</dt>
+											<dt>Consensus fee · signed {NANO_UNIT}</dt>
 											<dd>{box.rent.consensus_fee_nano}</dd>
 										</div>
 										<div>
-											<dt>Potential collectible charge · nanoERG</dt>
+											<dt>Potential collectible charge · {NANO_UNIT}</dt>
 											<dd>{collectibleNano(box).toString()}</dd>
 										</div>
 										<div>
@@ -256,7 +266,7 @@
 				</div>
 				<div>
 					<dt>Value held in scanned boxes</dt>
-					<dd>{erg(summary.value)} ERG</dd>
+					<dd>{erg(summary.value)} {TICKER}</dd>
 				</div>
 				<div>
 					<dt>Non-collectible boxes</dt>
@@ -275,9 +285,9 @@
 			not the live tip.
 		</p>
 		<p>
-			Potential rent is an ERG claim against a box, not an automatic debit or a claim about address
-			ownership. Spending or recreating a box changes its exposure. Token quantities and any
-			resulting token disposition are not included.
+			Potential rent is a claim in {TICKER} against a box, not an automatic debit or a claim about address
+			ownership. Spending or recreating a box changes its exposure. Token quantities and any resulting
+			token disposition are not included.
 		</p>
 		<p>
 			Earlier outputs and unresolved pre-index spends can leave a partial index’s unspent set

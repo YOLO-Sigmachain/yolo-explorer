@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { CHAIN_NAME, NANO_UNIT, SITE_NAME, TICKER } from '$lib/chain';
 	import { onMount, tick } from 'svelte';
 	import { page } from '$app/state';
 	import { replaceState } from '$app/navigation';
@@ -81,10 +82,10 @@
 </script>
 
 <svelte:head>
-	<title>Mempool — Kadia Explorer</title>
+	<title>Mempool — {SITE_NAME} Explorer</title>
 	<meta
 		name="description"
-		content="Inspect pending Ergo transactions observed by the configured node, with exact fees, source scope and explicit refresh."
+		content="Inspect pending {CHAIN_NAME} transactions observed by the configured node, with exact fees, source scope and explicit refresh."
 	/>
 </svelte:head>
 
@@ -228,10 +229,12 @@
 									</div>
 									<div class="transaction-fee">
 										<span class="mobile-label">Miner-fee outputs</span><span
-											title={transaction.fee === null ? undefined : transaction.fee + ' nanoERG'}
+											title={transaction.fee === null
+												? undefined
+												: transaction.fee + ' ' + NANO_UNIT}
 											>{transaction.fee === null
 												? 'Unknown'
-												: formatErg(transaction.fee) + ' ERG'}</span
+												: formatErg(transaction.fee) + ' ' + TICKER}</span
 										>
 									</div>
 									<div class="transaction-counts">
@@ -284,7 +287,7 @@
 											<dd>
 												{transaction.fee === null
 													? 'Unknown'
-													: formatNano(transaction.fee) + ' nanoERG'}
+													: formatNano(transaction.fee) + ' ' + NANO_UNIT}
 											</dd>
 										</div>
 									</dl>

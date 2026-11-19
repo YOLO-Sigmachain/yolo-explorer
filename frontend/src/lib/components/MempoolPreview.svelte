@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { TICKER } from '$lib/chain';
 	import { onMount } from 'svelte';
 	import { createMempoolLoader, type MempoolState } from '$lib/mempool/observations';
 	import { formatErg } from '$lib/format/amount';
@@ -52,7 +53,7 @@
 						<li>
 							<Hash value={tx.id} href={`/tx/${tx.id}`} copy={false} />
 							<span class="pending-fee"
-								>{tx.fee === null ? 'Fee unavailable' : `${formatErg(tx.fee)} ERG fee`}</span
+								>{tx.fee === null ? 'Fee unavailable' : `${formatErg(tx.fee)} ${TICKER} fee`}</span
 							>
 						</li>
 					{/each}

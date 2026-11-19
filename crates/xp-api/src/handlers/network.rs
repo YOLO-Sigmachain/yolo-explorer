@@ -1,12 +1,21 @@
 //! A compact, fixed-work overview. Its totals cover blocks, not an inferred wall-clock day.
-use crate::budget::Budget;
+use crate::budget::{Budget, MAX_BYTES};
 use crate::dto::{block_dto, BlockDto};
 use crate::{blocking, ApiError, AppState};
 use axum::{extract::State, Json};
 use serde::Serialize;
 use xp_store::rows::HeaderRow;
 
-const BLOCKS: usize = 720;
+/// One day of blocks at the active chain's target block time (720 on Ergo mainnet).
+fn day_blocks() -> usize {
+    xp_types::chain::get().blocks_per_day() as usize
+}
+/// Decode allowance for the summary's header scan: the shared [`MAX_BYTES`] per 720
+/// headers, so a chain with more blocks per day gets proportionally more (unchanged on
+/// Ergo mainnet).
+fn summary_decode_limit() -> usize {
+    MAX_BYTES.saturating_mul(day_blocks()) / 720
+}
 const PREVIEW_BLOCKS: usize = 10;
 const HOUR: u64 = 3_600_000;
 
@@ -53,7 +62,7 @@ fn aggregate(rows: &[(u32, HeaderRow)], partial_from: Option<u32>) -> NetworkSum
     }
     NetworkSummary {
         scope: "latest_indexed_blocks",
-        requested_blocks: BLOCKS,
+        requested_blocks: day_blocks(),
         block_count: rows.len(),
         transaction_count: rows.iter().map(|(_, h)| u64::from(h.tx_count)).sum(),
         fees: rows
@@ -82,11 +91,11 @@ fn aggregate(rows: &[(u32, HeaderRow)], partial_from: Option<u32>) -> NetworkSum
 pub async fn summary(State(state): State<AppState>) -> Result<Json<NetworkSummary>, ApiError> {
     Ok(Json(
         blocking(&state, |rd| {
-            let mut budget = Budget::new();
+            let mut budget = Budget::with_decode_limit(summary_decode_limit());
             let partial_from = rd.partial_from()?;
             let mut rows = Vec::new();
             if let Some(tip) = rd.indexed_height()? {
-                for height in (partial_from.unwrap_or(1)..=tip).rev().take(BLOCKS) {
+                for height in (partial_from.unwrap_or(1)..=tip).rev().take(day_blocks()) {
                     budget.work(1)?;
                     let header = rd
                         .header_at_admitted(height, |n| budget.admit_tx_row(n))?

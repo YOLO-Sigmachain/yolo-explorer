@@ -734,6 +734,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "axum",
+ "hex",
  "serde",
  "tokio",
  "tokio-util",
@@ -744,6 +745,7 @@ dependencies = [
  "xp-ingest",
  "xp-source",
  "xp-store",
+ "xp-types",
 ]
 
 [[package]]
@@ -3038,6 +3040,7 @@ name = "xp-wire"
 version = "0.1.0"
 dependencies = [
  "blake2",
+ "bs58",
  "ergo-lib",
  "hex",
  "serde_json",

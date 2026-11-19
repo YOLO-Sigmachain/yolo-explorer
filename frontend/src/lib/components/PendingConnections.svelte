@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { CHAIN_MARK, TICKER } from '$lib/chain';
 	import { onMount } from 'svelte';
 	import {
 		connectionsFor,
@@ -154,7 +155,7 @@
 								>{/if}
 						</div>
 						<div class="selected-node" aria-label="Selected pending transaction">
-							<div class="node-mark" aria-hidden="true">Σ</div>
+							<div class="node-mark" aria-hidden="true">{CHAIN_MARK}</div>
 							<p class="eyebrow">SELECTED TRANSACTION</p>
 							<a class="selected-id" href={'/tx/' + selection.transaction.id}
 								>{selection.transaction.id}</a
@@ -163,7 +164,8 @@
 								{selection.transaction.input_count} inputs · {selection.transaction.output_count} outputs
 							</p>
 							{#if selection.transaction.fee !== null}<p class="node-fee">
-									{formatErg(selection.transaction.fee)} ERG<span>Miner-fee outputs</span>
+									{formatErg(selection.transaction.fee)}
+									{TICKER}<span>Miner-fee outputs</span>
 								</p>{/if}
 							<a class="status-link" href={'/tx/' + selection.transaction.id}
 								>Check transaction status ↗</a

@@ -12,11 +12,21 @@ export interface StatusDto {
 	stalled: StatusStalledDto | null;
 	inflight_reads: number;
 	rate_limited_total: number;
+	/** Chain identity and parameters; absent on older backends. */
+	chain?: StatusChainDto;
 }
 export interface StatusStalledDto {
 	height: number;
 	since_secs: number;
 	reason: string;
+}
+export interface StatusChainDto {
+	name: string;
+	ticker: string;
+	address_prefix: number;
+	block_seconds: number;
+	blocks_per_day: number;
+	rent_per_byte: number;
 }
 export interface MempoolSnapshot {
 	scope: 'configured_node_mempool';
@@ -204,10 +214,14 @@ export interface PageDto<T> {
 export interface RewardBreakdown {
 	block_id: string;
 	height: number;
-	basis: 'observed_eip27_reward_box' | 'unsupported';
+	basis: 'observed_eip27_reward_box' | 'observed_split_emission' | 'unsupported';
 	gross_reward: string | null;
 	reemission_obligation: string | null;
 	miner_subsidy: string | null;
+	/** Nano amount sent to the treasury, on chains whose emission is split. */
+	treasury_reward?: string;
+	/** Nano amount sent to the liquidity fund, on chains whose emission is split. */
+	lp_reward?: string;
 	transaction_fees: string;
 	reward_box_id: string | null;
 	transaction_id: string | null;

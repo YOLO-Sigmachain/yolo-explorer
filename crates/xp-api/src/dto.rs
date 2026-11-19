@@ -265,6 +265,32 @@ pub struct StatusDto {
     pub inflight_reads: u32,
     /// Requests rejected with 429 since process start.
     pub rate_limited_total: u64,
+    pub chain: ChainDto,
+}
+
+/// The chain this explorer was configured for; constant for the life of the process.
+#[derive(Debug, Serialize)]
+pub struct ChainDto {
+    pub name: &'static str,
+    pub ticker: &'static str,
+    pub address_prefix: u8,
+    pub block_seconds: u64,
+    pub blocks_per_day: u32,
+    pub rent_per_byte: u64,
+}
+
+impl ChainDto {
+    pub fn current() -> ChainDto {
+        let p = xp_types::chain::get();
+        ChainDto {
+            name: &p.name,
+            ticker: &p.ticker,
+            address_prefix: p.address_prefix,
+            block_seconds: p.block_seconds,
+            blocks_per_day: p.blocks_per_day(),
+            rent_per_byte: p.rent_per_byte,
+        }
+    }
 }
 
 #[derive(Debug, Serialize)]

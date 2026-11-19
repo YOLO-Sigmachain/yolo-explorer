@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { ERGO_APPS, EXPLORER_TITLE } from '$lib/chain';
 	import { untrack } from 'svelte';
 	import { page } from '$app/state';
 	import { api } from '$lib/api/endpoints';
@@ -44,8 +45,8 @@
 	const confirmedContext = $derived(
 		!!tx && (tracking.status?.state === 'confirmed' || tracking.status === null)
 	);
-	const applicationOrders = $derived(tx ? transactionOrders(tx) : []);
-	const bridgeDeposits = $derived(tx ? transactionDeposits(tx) : []);
+	const applicationOrders = $derived(tx && ERGO_APPS ? transactionOrders(tx) : []);
+	const bridgeDeposits = $derived(tx && ERGO_APPS ? transactionDeposits(tx) : []);
 	// A live inclusion check updates confirmations, not mutable box-spend/rent details.
 	const receiptTx = $derived(
 		tx && tracking.status?.state === 'confirmed'
@@ -92,7 +93,7 @@
 </script>
 
 <svelte:head>
-	<title>Transaction {data.id} — Ergo Explorer</title>
+	<title>Transaction {data.id} — {EXPLORER_TITLE}</title>
 </svelte:head>
 
 <div class="head" class:pending-record={pendingContext}>
@@ -142,8 +143,9 @@
 			{deposit}
 		/>{/each}{/key}
 {#if tx}<p class="investigation-link">
-		<a href={`/investigate?kind=tx&id=${tx.id}`}>Investigate this transaction ↗</a> ·
-		<a href={`/applications?kind=tx&id=${tx.id}`}>Inspect application activity ↗</a>
+		<a href={`/investigate?kind=tx&id=${tx.id}`}>Investigate this transaction ↗</a>{#if ERGO_APPS}
+			·
+			<a href={`/applications?kind=tx&id=${tx.id}`}>Inspect application activity ↗</a>{/if}
 	</p>{/if}
 
 <!-- Inputs on the left, outputs on the right, parted by a rule that the two column headings

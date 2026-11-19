@@ -5,6 +5,7 @@
 	import { ApiError } from '$lib/api/client';
 	import type { TokenInfoDto, TokenSearchDto } from '$lib/api/types';
 	import { formatTokenAmount } from '$lib/format/amount';
+	import { CHAIN_MARK } from '$lib/chain';
 	import { truncateMiddle } from '$lib/format/hash';
 	import Hash from './Hash.svelte';
 	import Icon from './Icon.svelte';
@@ -216,7 +217,7 @@
 			{#each items as token (token.id)}
 				<article class="token-result" aria-label={`Token ${token.id}`}>
 					<div class="token-symbol" aria-hidden="true">
-						{token.name.trim().slice(0, 1).toUpperCase() || 'Σ'}
+						{token.name.trim().slice(0, 1).toUpperCase() || CHAIN_MARK}
 					</div>
 					<div class="token-identity">
 						<div class="name-line">

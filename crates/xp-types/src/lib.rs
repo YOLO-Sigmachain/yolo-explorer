@@ -1,3 +1,4 @@
+pub mod chain;
 pub mod rent;
 
 pub type Hash32 = [u8; 32];

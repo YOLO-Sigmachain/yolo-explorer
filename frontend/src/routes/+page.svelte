@@ -1,4 +1,13 @@
 <script lang="ts">
+	import {
+		BLOCKS_PER_DAY,
+		CHAIN_NAME,
+		CHAIN_NETWORK,
+		EXPLORER_TITLE,
+		NANO_UNIT,
+		SITE_NAME,
+		TICKER
+	} from '$lib/chain';
 	import Icon from '$lib/components/Icon.svelte';
 	import Sparkline from '$lib/components/Sparkline.svelte';
 	import Table from '$lib/components/Table.svelte';
@@ -129,17 +138,17 @@
 </script>
 
 <svelte:head>
-	<title>Kadia — Ergo Explorer</title>
+	<title>{SITE_NAME} — {EXPLORER_TITLE}</title>
 	<meta
 		name="description"
-		content="An Ergo blockchain explorer: blocks, transactions, boxes, addresses and storage rent, read straight from an indexed node."
+		content="A {CHAIN_NAME} blockchain explorer: blocks, transactions, boxes, addresses and storage rent, read straight from an indexed node."
 	/>
 </svelte:head>
 
 <div class="home-dashboard">
 	<section class="network-overview" aria-label="Network summary">
 		<header class="network-heading">
-			<h1>Ergo mainnet</h1>
+			<h1>{CHAIN_NETWORK}</h1>
 			<p class="network-tip">
 				{#if latest}<span>Snapshot height</span>
 					<a href={`/blocks/${latest.height}`} aria-label={`Snapshot block ${latest.height}`}
@@ -169,26 +178,26 @@
 				<dd
 					title={data.blocks.error
 						? undefined
-						: `Exact transaction fees: ${totalFees} nanoERG. Displayed to three decimal places. ${dayNote}`}
+						: `Exact transaction fees: ${totalFees} ${NANO_UNIT}. Displayed to three decimal places. ${dayNote}`}
 				>
 					{data.blocks.error
 						? 'Unavailable'
 						: `${roundedFees ? '≈ ' : ''}${formatErg(totalFees, { maxFrac: 3 })}`}{#if !data.blocks.error}<small
 						>
-							ERG</small
+							{TICKER}</small
 						>{/if}
 				</dd>
 			</div>
 			<div data-metric="hashrate">
 				<dt
-					title={`Difficulty divided by Ergo's ${TARGET_BLOCK_SECONDS} s target block time; not a measured hashrate.`}
+					title={`Difficulty divided by ${CHAIN_NAME}'s ${TARGET_BLOCK_SECONDS} s target block time; not a measured hashrate.`}
 				>
 					Estimated hashrate
 				</dt>
 				<dd>{latest ? hashrate : 'Unavailable'}</dd>
 			</div>
 			<div data-metric="rent">
-				<dt>Rent · next 720 blocks</dt>
+				<dt>Rent · next {BLOCKS_PER_DAY} blocks</dt>
 				<dd>
 					{data.rent.error
 						? 'Unavailable'
@@ -284,7 +293,7 @@
 								</span>
 								<span class="tx-age"><Age ms={tx.timestamp} /></span>
 								<span class="tx-value">
-									{formatErg(tx.fee, { maxFrac: 4 })}<span class="unit">ERG fee</span>
+									{formatErg(tx.fee, { maxFrac: 4 })}<span class="unit">{TICKER} fee</span>
 								</span>
 							</a>
 						</li>
@@ -332,7 +341,7 @@
 							? 'Unavailable'
 							: `${data.rent.data?.complete === true ? '' : '≥ '}${rentItems.length.toLocaleString('en-US')}`}</b
 					>
-					boxes mature in the next 720 blocks, owing at least
+					boxes mature in the next {BLOCKS_PER_DAY} blocks, owing at least
 					<b><Amount nano={rentDue.toString()} maxFrac={3} /></b> between them.
 				</p>
 				<Table dense>

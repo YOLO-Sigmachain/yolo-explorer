@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { NANO_UNIT, TICKER } from '$lib/chain';
 	import { invalidateAll } from '$app/navigation';
 	import { api } from '$lib/api/endpoints';
 	import type { BoxDto } from '$lib/api/types';
@@ -62,8 +63,8 @@
 								— open box</span
 							></a
 						>
-						{#if row.box}<p class="box-value" title={`${row.box.value} nanoERG`}>
-								{formatErg(row.box.value)} <span>ERG</span>
+						{#if row.box}<p class="box-value" title={`${row.box.value} ${NANO_UNIT}`}>
+								{formatErg(row.box.value)} <span>{TICKER}</span>
 							</p>
 							{#each row.box.tokens.slice(0, 2) as token, i (`${token.id}:${i}`)}<p
 									class="token-line"
@@ -214,8 +215,8 @@
 			<p class="eyebrow">02 / Selected box</p>
 			<h3>This box</h3>
 			<p class="mono focus-id" title={box.id}>{truncateMiddle(box.id, 10, 8)}</p>
-			<p class="focus-value" title={`${box.value} nanoERG`}>
-				{formatErg(box.value)} <span>ERG</span>
+			<p class="focus-value" title={`${box.value} ${NANO_UNIT}`}>
+				{formatErg(box.value)} <span>{TICKER}</span>
 			</p>
 			<p class="muted">
 				{box.tokens.length} token {box.tokens.length === 1 ? 'type' : 'types'} · output {box.index}

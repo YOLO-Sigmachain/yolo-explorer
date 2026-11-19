@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { CHAIN_MARK, TICKER } from '$lib/chain';
 	import type { BoxDto, TxDto } from '$lib/api/types';
 	import type { AddressEffect } from '$lib/tx/effects';
 	import { formatErg, formatTokenAmount } from '$lib/format/amount';
@@ -153,7 +154,7 @@
 								</p>
 							{/if}
 							{#if box}
-								<p class="box-amount">{formatErg(box.value)} <span>ERG</span></p>
+								<p class="box-amount">{formatErg(box.value)} <span>{TICKER}</span></p>
 								{#if box.tokens.length}
 									<ul class="box-tokens" aria-label="Box tokens">
 										{#each box.tokens.slice(0, 3) as token (token.id)}
@@ -231,10 +232,10 @@
 			{#if side.key === 'input'}
 				<div class="flow-hub">
 					<div class="crystal-shadow" aria-hidden="true"></div>
-					<div class="crystal" aria-hidden="true"><span>Σ</span></div>
+					<div class="crystal" aria-hidden="true"><span>{CHAIN_MARK}</span></div>
 					<p class="hub-label">Transaction</p>
 					<p class="hub-id" title={tx.id}>{truncateMiddle(tx.id, 6, 4)}</p>
-					<p class="hub-fee"><span>Transaction fee</span>{formatErg(tx.fee)} ERG</p>
+					<p class="hub-fee"><span>Transaction fee</span>{formatErg(tx.fee)} {TICKER}</p>
 				</div>
 			{/if}
 		{/each}
@@ -269,8 +270,9 @@
 			</div>
 			<div class="inspector-balances">
 				<p class="net-erg" class:negative={selected.erg < 0n}>
-					<span class="net-label">Net ERG change</span>
-					<strong>{signedErg(selected.erg)}</strong> ERG
+					<span class="net-label">Net {TICKER} change</span>
+					<strong>{signedErg(selected.erg)}</strong>
+					{TICKER}
 				</p>
 				{#if selected.tokens.length}<div class="net-token-group">
 						<p class="net-label">Net token change</p>

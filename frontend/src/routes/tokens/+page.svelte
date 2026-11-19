@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { EXPLORER_TITLE } from '$lib/chain';
 	import { goto } from '$app/navigation';
 	import Panel from '$lib/components/Panel.svelte';
 	import TokenDiscovery from '$lib/components/TokenDiscovery.svelte';
@@ -59,7 +60,7 @@
 </script>
 
 <svelte:head>
-	<title>Tokens — Ergo Explorer</title>
+	<title>Tokens — {EXPLORER_TITLE}</title>
 </svelte:head>
 
 <TokenDiscovery query={data.query} match={data.match} />

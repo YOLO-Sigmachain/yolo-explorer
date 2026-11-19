@@ -19,13 +19,23 @@ pub fn maturity_height(creation: u32) -> u32 {
 /// a collectible opportunity: see [`consensus_storage_fee`] and [`is_rent_claimable`]. Only
 /// meaningful when the fee is positive under consensus.
 pub fn rent_due(size_bytes: u32, value: u64) -> u64 {
-    (size_bytes as u64).saturating_mul(RENT_PER_BYTE).min(value)
+    rent_due_at(crate::chain::get().rent_per_byte, size_bytes, value)
+}
+
+/// [`rent_due`] at an explicit per-byte rate.
+pub fn rent_due_at(rent_per_byte: u64, size_bytes: u32, value: u64) -> u64 {
+    (size_bytes as u64).saturating_mul(rent_per_byte).min(value)
 }
 
 /// The storage fee exactly as consensus computes it: `size * RENT_PER_BYTE` in **wrapping
 /// i32** arithmetic. Negative for any box of [`MAX_CLAIMABLE_SIZE_BYTES`] + 1 bytes or more.
 pub fn consensus_storage_fee(size_bytes: u32) -> i32 {
-    (size_bytes as i32).wrapping_mul(RENT_PER_BYTE as i32)
+    consensus_storage_fee_at(crate::chain::get().rent_per_byte, size_bytes)
+}
+
+/// [`consensus_storage_fee`] at an explicit per-byte rate.
+pub fn consensus_storage_fee_at(rent_per_byte: u64, size_bytes: u32) -> i32 {
+    (size_bytes as i32).wrapping_mul(rent_per_byte as i32)
 }
 
 /// Whether a box can be rent-claimed at all, i.e. its consensus storage fee is positive.
@@ -64,6 +74,20 @@ mod tests {
         // A real example from the live eligible list: 2,008 bytes.
         assert_eq!(consensus_storage_fee(2_008), -1_784_967_296);
         assert!(!is_rent_claimable(2_008));
+    }
+
+    #[test]
+    fn explicit_rate_moves_the_wrap_boundary() {
+        // At 300,000 per byte the i32 product stays positive up to 7,158 bytes.
+        assert_eq!(consensus_storage_fee_at(300_000, 7_158), 2_147_400_000);
+        assert!(consensus_storage_fee_at(300_000, 7_159) < 0);
+        assert_eq!(rent_due_at(300_000, 105, 1_000_000_000), 31_500_000);
+        assert_eq!(rent_due_at(300_000, 105, 1_000), 1_000);
+        // The explicit form at the Ergo rate is the implicit one.
+        assert_eq!(
+            consensus_storage_fee_at(RENT_PER_BYTE, 2_008),
+            consensus_storage_fee(2_008)
+        );
     }
 
     #[test]

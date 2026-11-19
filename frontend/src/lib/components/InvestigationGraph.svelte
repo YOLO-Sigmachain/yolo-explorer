@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { NANO_UNIT, TICKER } from '$lib/chain';
 	import { onDestroy, untrack } from 'svelte';
 	import { api } from '$lib/api/endpoints';
 	import type { BoxDto, TxDto } from '$lib/api/types';
@@ -399,7 +400,8 @@
 							<div>
 								<dt>Fee</dt>
 								<dd>
-									{formatErg(selectedTx.fee)} ERG<small>{formatNano(selectedTx.fee)} nanoERG</small>
+									{formatErg(selectedTx.fee)}
+									{TICKER}<small>{formatNano(selectedTx.fee)} {NANO_UNIT}</small>
 								</dd>
 							</div>
 							<div>
@@ -415,9 +417,9 @@
 								details do not establish balances or zero values.
 							</p>{/if}
 					{:else if selectedBox}<p class="box-amount">
-							{formatErg(selectedBox.value)} <span>ERG</span>
+							{formatErg(selectedBox.value)} <span>{TICKER}</span>
 						</p>
-						<p class="raw-value">{formatNano(selectedBox.value)} nanoERG · exact box value</p>
+						<p class="raw-value">{formatNano(selectedBox.value)} {NANO_UNIT} · exact box value</p>
 						<dl class="facts">
 							<div>
 								<dt>Creation height</dt>

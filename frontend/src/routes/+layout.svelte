@@ -1,4 +1,15 @@
 <script lang="ts">
+	import {
+		CHAIN_NETWORK,
+		ERGO_APPS,
+		EXPLORER_TITLE,
+		NETWORK_SWITCH,
+		CHAIN_MARK,
+		SHOW_MARK,
+		SITE_NAME,
+		SOURCE_LABEL,
+		SOURCE_URL
+	} from '$lib/chain';
 	import '$lib/styles/tokens.css';
 	import '$lib/styles/base.css';
 	import '$lib/styles/appearances.css';
@@ -13,6 +24,7 @@
 	import StatusBadge from '$lib/components/StatusBadge.svelte';
 	import SearchBox from '$lib/components/SearchBox.svelte';
 	import AppearancePicker from '$lib/components/AppearancePicker.svelte';
+	import NetworkSwitch from '$lib/components/NetworkSwitch.svelte';
 	import Icon, { type IconName } from '$lib/components/Icon.svelte';
 	import { onMount } from 'svelte';
 
@@ -51,7 +63,7 @@
 		primary?: boolean;
 	}
 
-	const navLinks: NavLink[] = [
+	const allNavLinks: NavLink[] = [
 		{ href: '/', label: 'Home', icon: 'home', primary: true },
 		{ href: '/blocks', label: 'Blocks', icon: 'blocks', primary: true },
 		{ href: '/txs', label: 'Transactions', icon: 'txs', primary: true },
@@ -73,6 +85,7 @@
 		{ href: '/developers', label: 'API playground', compactLabel: 'API', icon: 'contract' },
 		{ href: '/status', label: 'Status', icon: 'status' }
 	];
+	const navLinks = allNavLinks.filter((link) => ERGO_APPS || link.href !== '/applications');
 	const compactNav = $derived(appearance.current === 'prism' || appearance.current === 'atelier');
 
 	function isActive(href: string): boolean {
@@ -138,11 +151,16 @@
 <div class="shell">
 	<aside class="rail">
 		<div class="rail-in">
-			<a class="brand" href="/" aria-label="Kadia Ergo Explorer">
-				<span class="mark" aria-hidden="true">Σ</span>
+			<a
+				class="brand"
+				class:no-mark={!SHOW_MARK}
+				href="/"
+				aria-label="{SITE_NAME} {EXPLORER_TITLE}"
+			>
+				{#if SHOW_MARK}<span class="mark" aria-hidden="true">{CHAIN_MARK}</span>{/if}
 				<span class="wordmark">
-					<span class="name">Kadia</span>
-					<span class="sub">Ergo Explorer</span>
+					<span class="name">{SITE_NAME}</span>
+					<span class="sub">{EXPLORER_TITLE}</span>
 				</span>
 			</a>
 
@@ -170,11 +188,7 @@
 			<div class="rail-foot">
 				<!-- The chain's state, restated where the eye rests between navigations. Every figure
 			     comes from /v1/status; nothing here is estimated. -->
-				<a class="chain" href="/status" title={h.detail}>
-					<span class="chain-head">
-						<span class="dot tone-{h.tone}" aria-hidden="true"></span>
-						Ergo mainnet
-					</span>
+				{#snippet chainRows()}
 					<span class="chain-row">
 						<span>Indexed height</span>
 						<b>{status.current?.indexed?.toLocaleString('en-US') ?? '—'}</b>
@@ -187,7 +201,26 @@
 						<span>Indexer</span>
 						<b>{status.current ? `${h.label.toLowerCase()}, ${status.current.mode}` : '—'}</b>
 					</span>
-				</a>
+				{/snippet}
+				{#if NETWORK_SWITCH}
+					<!-- A control cannot sit inside a link, so with a network switcher the card is a plain
+					     box; the status page stays one step away in the navigation. -->
+					<div class="chain" title={h.detail}>
+						<span class="chain-head">
+							<span class="dot tone-{h.tone}" aria-hidden="true"></span>
+							<NetworkSwitch />
+						</span>
+						{@render chainRows()}
+					</div>
+				{:else}
+					<a class="chain" href="/status" title={h.detail}>
+						<span class="chain-head">
+							<span class="dot tone-{h.tone}" aria-hidden="true"></span>
+							{CHAIN_NETWORK}
+						</span>
+						{@render chainRows()}
+					</a>
+				{/if}
 
 				<p class="note">
 					Every figure here is read from the chain or computed from it. Hover one to see how.
@@ -237,18 +270,21 @@
 		<footer class="foot">
 			<div class="foot-in">
 				<a class="brand small" href="/">
-					<span class="mark" aria-hidden="true">Σ</span>
-					<span class="wordmark"><span class="name">Kadia</span></span>
+					{#if SHOW_MARK}<span class="mark" aria-hidden="true">{CHAIN_MARK}</span>{/if}
+					<span class="wordmark"><span class="name">{SITE_NAME}</span></span>
 				</a>
 				<p class="foot-line">Open source, built for a fairer and more open future.</p>
 				<nav class="foot-links" aria-label="Footer">
 					<a href="/developers">API</a>
 					<a href="/status">Status</a>
-					<a href="https://github.com/arkadianet" rel="noreferrer">GitHub</a>
+					{#if SOURCE_URL}<a href={SOURCE_URL} rel="noreferrer">{SOURCE_LABEL}</a>{/if}
 				</nav>
-				<span class="pill mainnet"><span class="dot tone-{h.tone}"></span>Ergo mainnet</span>
+				<span class="pill mainnet"
+					><span class="dot tone-{h.tone}"></span>{#if NETWORK_SWITCH}<NetworkSwitch
+						/>{:else}{CHAIN_NETWORK}{/if}</span
+				>
 			</div>
-			<p class="copy">© {year} Kadia</p>
+			<p class="copy">© {year} {SITE_NAME}</p>
 		</footer>
 	</div>
 </div>
