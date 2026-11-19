@@ -1,10 +1,10 @@
 <script lang="ts">
+	import ChainMark from '$lib/components/ChainMark.svelte';
 	import {
 		CHAIN_NETWORK,
 		ERGO_APPS,
 		EXPLORER_TITLE,
 		NETWORK_SWITCH,
-		CHAIN_MARK,
 		SHOW_MARK,
 		SITE_NAME,
 		SOURCE_LABEL,
@@ -157,7 +157,7 @@
 				href="/"
 				aria-label="{SITE_NAME} {EXPLORER_TITLE}"
 			>
-				{#if SHOW_MARK}<span class="mark" aria-hidden="true">{CHAIN_MARK}</span>{/if}
+				{#if SHOW_MARK}<span class="mark" aria-hidden="true"><ChainMark /></span>{/if}
 				<span class="wordmark">
 					<span class="name">{SITE_NAME}</span>
 					<span class="sub">{EXPLORER_TITLE}</span>
@@ -270,7 +270,7 @@
 		<footer class="foot">
 			<div class="foot-in">
 				<a class="brand small" href="/">
-					{#if SHOW_MARK}<span class="mark" aria-hidden="true">{CHAIN_MARK}</span>{/if}
+					{#if SHOW_MARK}<span class="mark" aria-hidden="true"><ChainMark /></span>{/if}
 					<span class="wordmark"><span class="name">{SITE_NAME}</span></span>
 				</a>
 				<p class="foot-line">Open source, built for a fairer and more open future.</p>

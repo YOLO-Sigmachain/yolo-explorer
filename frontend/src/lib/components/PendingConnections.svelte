@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { CHAIN_MARK, TICKER } from '$lib/chain';
+	import { TICKER } from '$lib/chain';
+	import ChainMark from './ChainMark.svelte';
 	import { onMount } from 'svelte';
 	import {
 		connectionsFor,
@@ -155,7 +156,7 @@
 								>{/if}
 						</div>
 						<div class="selected-node" aria-label="Selected pending transaction">
-							<div class="node-mark" aria-hidden="true">{CHAIN_MARK}</div>
+							<div class="node-mark" aria-hidden="true"><ChainMark /></div>
 							<p class="eyebrow">SELECTED TRANSACTION</p>
 							<a class="selected-id" href={'/tx/' + selection.transaction.id}
 								>{selection.transaction.id}</a

@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { CHAIN_MARK, NANO_UNIT, TICKER } from '$lib/chain';
+	import { NANO_UNIT, TICKER } from '$lib/chain';
+	import ChainMark from './ChainMark.svelte';
 	import { onDestroy, onMount, untrack } from 'svelte';
 	import { createGroupBalances, type GroupState } from '$lib/addresses/groups';
 	import { createBalanceWatch, emptyWatch, MAX_WATCH_EVENTS } from '$lib/addresses/watch';
@@ -331,7 +332,7 @@
 			</div>
 		</div>
 	{:else if !groupState.busy && !groupState.error}<div class="unloaded">
-			<span class="unloaded-mark" aria-hidden="true">{CHAIN_MARK}</span>
+			<span class="unloaded-mark" aria-hidden="true"><ChainMark /></span>
 			<p>
 				{items.length
 					? `Load this selection to compare member balances and see exact combined ${TICKER} and token quantities.`

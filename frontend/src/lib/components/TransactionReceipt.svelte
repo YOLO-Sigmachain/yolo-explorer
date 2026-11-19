@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { CHAIN_MARK, TICKER } from '$lib/chain';
+	import { TICKER } from '$lib/chain';
+	import ChainMark from './ChainMark.svelte';
 	import { untrack } from 'svelte';
 	import type { TxDto, TxEvidence } from '$lib/api/types';
 	import { api } from '$lib/api/endpoints';
@@ -200,7 +201,7 @@
 					{/each}
 				{:else}
 					<div class="asset">
-						<div class="asset-icon">{CHAIN_MARK}</div>
+						<div class="asset-icon"><ChainMark /></div>
 						<div class="asset-value">
 							<p class="amount" class:negative={selected.erg < 0n}>{signedErg(selected.erg)}</p>
 							<p class="asset-name">{TICKER}</p>

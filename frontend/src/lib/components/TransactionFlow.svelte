@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { CHAIN_MARK, TICKER } from '$lib/chain';
+	import { TICKER } from '$lib/chain';
+	import ChainMark from './ChainMark.svelte';
 	import type { BoxDto, TxDto } from '$lib/api/types';
 	import type { AddressEffect } from '$lib/tx/effects';
 	import { formatErg, formatTokenAmount } from '$lib/format/amount';
@@ -232,7 +233,7 @@
 			{#if side.key === 'input'}
 				<div class="flow-hub">
 					<div class="crystal-shadow" aria-hidden="true"></div>
-					<div class="crystal" aria-hidden="true"><span>{CHAIN_MARK}</span></div>
+					<div class="crystal" aria-hidden="true"><span><ChainMark /></span></div>
 					<p class="hub-label">Transaction</p>
 					<p class="hub-id" title={tx.id}>{truncateMiddle(tx.id, 6, 4)}</p>
 					<p class="hub-fee"><span>Transaction fee</span>{formatErg(tx.fee)} {TICKER}</p>
