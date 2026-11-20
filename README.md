@@ -1,6 +1,4 @@
-# Kadia Explorer
-
-## About this fork
+# YOLO explorer
 
 This is the YOLO SigmaChain fork of [Kadia Explorer](https://github.com/arkadianet/kadia-explorer).
 
@@ -12,7 +10,15 @@ This is the YOLO SigmaChain fork of [Kadia Explorer](https://github.com/arkadian
 - **What does not change:** With no `[chain]` section in the configuration, the indexer uses the built-in Ergo mainnet profile.
 - **Example settings for a YOLO network:** `explorer.yolo.example.toml`.
 - **Compare with upstream:** Every change is in the commits after the starting commit above. GitHub's compare view against the upstream project shows them.
-- **Licence:** the upstream project does not state one. Publication of this fork is pending confirmation from the upstream authors.
+- **Licence:** MIT OR Apache-2.0, as declared in the upstream Rust package files. The upstream repository does not yet carry the licence texts.
+
+---
+
+## Upstream README
+
+Everything below is the README of Kadia Explorer, kept as upstream wrote it. It describes the upstream project, not this fork. The hosted site it names is upstream's.
+
+# Kadia Explorer
 
 A standalone Ergo blockchain explorer: a Rust indexer + JSON API over an embedded
 [redb](https://github.com/cberner/redb) store, and a SvelteKit frontend. It syncs from any
