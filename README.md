@@ -1,5 +1,19 @@
 # Kadia Explorer
 
+## About this fork
+
+This is the YOLO SigmaChain fork of [Kadia Explorer](https://github.com/arkadianet/kadia-explorer).
+
+- **Starts from:** upstream `master` at commit `25fda1d09476b0d4fb8f674ca26d0e0f75c63a40` (the upstream project has no tags).
+- **What changes:**
+  - A chain profile (name, ticker, address prefix, block time, storage rent, emission) set in the `[chain]` section of the configuration file, with a three-party emission (miner, treasury, liquidity fund) and a miner lock in blocks.
+  - Frontend settings for chain name, ticker, logo and a network switch, and the Applications section can be switched off.
+  - Tests for the chain profile in the API and the frontend.
+- **What does not change:** With no `[chain]` section in the configuration, the indexer uses the built-in Ergo mainnet profile.
+- **Example settings for a YOLO network:** `explorer.yolo.example.toml`.
+- **Compare with upstream:** Every change is in the commits after the starting commit above. GitHub's compare view against the upstream project shows them.
+- **Licence:** the upstream project does not state one. Publication of this fork is pending confirmation from the upstream authors.
+
 A standalone Ergo blockchain explorer: a Rust indexer + JSON API over an embedded
 [redb](https://github.com/cberner/redb) store, and a SvelteKit frontend. It syncs from any
 Ergo node's REST API (the Rust node's extra index is not required), keeps its own compact
