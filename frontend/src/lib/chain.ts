@@ -115,9 +115,9 @@ export const ERGO_APPS = parseFlag(env.VITE_ERGO_APPS, true);
 export const SHOW_ERGO_LOGO = parseFlag(env.VITE_SHOW_ERGO_LOGO, true);
 /** The one-character chain mark drawn on transaction, token and header art. Ergo's Sigma unless set. */
 export const CHAIN_MARK = parseText(env.VITE_CHAIN_MARK, 'Σ');
-/** The header mark shows for Ergo's logo, or for any chain that sets its own mark. */
 /** Path of a picture to draw in place of the mark (a file in `static/`, for example `/yolo-logo.png`). Empty: none. */
 export const CHAIN_LOGO = parseText(env.VITE_CHAIN_LOGO, '');
+/** The header mark shows for Ergo's logo, or for any chain that sets its own mark. */
 export const SHOW_MARK = SHOW_ERGO_LOGO || CHAIN_MARK !== 'Σ' || CHAIN_LOGO !== '';
 export const SOURCE_URL = parseSourceUrl(env.VITE_SOURCE_URL, DEFAULT_SOURCE_URL);
 export const SOURCE_LABEL = SOURCE_URL === null ? '' : sourceLabel(SOURCE_URL);
